@@ -8,7 +8,12 @@ function Login() {
         type="module"
         src="https://unpkg.com/@splinetool/viewer@1.10.74/build/spline-viewer.js"
       ></script>
-      <spline-viewer url="https://prod.spline.design/a6NfPnCxiTXRnhWw/scene.splinecode" height="1050"></spline-viewer>
+      <iframe
+        src="https://my.spline.design/r4xbot-glm2ThTI8CPTrAX41n5mkl9V/"
+        frameborder="0"
+        width="100%"
+        height="1050"
+      ></iframe>
     </div>
   );
 }
