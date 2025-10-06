@@ -47,7 +47,7 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 30px;
   opacity: 0;
   transform: translate(-50%, -70%);
   animation: fadeInUp 0.8s ease-out forwards;

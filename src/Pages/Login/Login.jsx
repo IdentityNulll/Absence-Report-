@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import "./Login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { faEye, faUser } from "@fortawesome/free-regular-svg-icons";
+import { faEye, faUser, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GoogleLogin } from "@react-oauth/google";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,22 +38,27 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <FontAwesomeIcon icon={faUser}/>
+            <FontAwesomeIcon icon={faUser} />
           </div>
 
           <div className="input-group">
-            
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <FontAwesomeIcon icon={faEye}/>
+            <FontAwesomeIcon
+              icon={showPassword ? faEyeSlash : faEye}
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ cursor: "pointer" }}
+            />
           </div>
 
-          <button type="submit" className="login-btn">Login</button>
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
       </div>
       <script
