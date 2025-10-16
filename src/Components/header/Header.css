@@ -157,3 +157,18 @@
     right: -5px;
   }
 }
+
+
+.notification > svg {
+  animation: flip 0.9s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotate(8deg);
+  }
+  100% {
+    transform: rotate(-8deg);
+  }
+}

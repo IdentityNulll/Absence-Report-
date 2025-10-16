@@ -31,14 +31,12 @@ input {
 
 .login-form {
   position: absolute;
-  top: 20%;
-  left: 50%;
+  top: 8%;
+  left: 36%;
   z-index: 2;
-  font-weight: bold;
   width: 500px;
-  height: 300px;
+  height: 340px;
   background-color: rgba(255, 255, 255, 0.274);
-  /* background: transparent; */
   box-shadow: 1px 1px 10px white;
   backdrop-filter: blur(10px);
   border-radius: 10px;
@@ -49,12 +47,16 @@ input {
   align-items: center;
   gap: 30px;
   opacity: 0;
-  transform: translate(-50%, -70%);
+  transform: translate(-50%, -45%);
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
 @keyframes fadeInUp {
-  to {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -55%);
+  }
+  100% {
     opacity: 1;
     transform: translate(-50%, -50%);
   }
