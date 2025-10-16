@@ -1,0 +1,159 @@
+/* ===========================
+   🎓 Academic Admin Header
+=========================== */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  color: var(--text-color);
+  padding: 12px 40px;
+  width: 100%;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow-light);
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  transition: var(--transition);
+}
+
+/* ===========================
+   Left Side - Logo & Title
+=========================== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: var(--shadow-light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-medium);
+}
+
+.header-left h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.header-left p {
+  font-size: 0.85rem;
+  color: var(--subtext-color);
+  margin: 0;
+}
+
+/* ===========================
+   Right Side - Icons & Profile
+=========================== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.notification {
+  position: relative;
+  font-size: 1.3rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.notification:hover {
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+.notification sup {
+  background: #ef4444;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 5px;
+  font-size: 0.6rem;
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  font-weight: 600;
+}
+
+/* Profile Avatar */
+.profile-avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-light);
+  transition: var(--transition);
+}
+
+.profile-avatar:hover {
+  box-shadow: var(--shadow-medium);
+  transform: scale(1.05);
+}
+
+/* ===========================
+   Responsive Design
+=========================== */
+@media (max-width: 992px) {
+  .admin-header {
+    padding: 10px 25px;
+  }
+  .header-left h2 {
+    font-size: 1rem;
+  }
+  .header-right {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 8px 15px;
+  }
+  .notification {
+    font-size: 1.1rem;
+  }
+  .profile-avatar {
+    width: 36px;
+    height: 36px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-left h2 {
+    display: none;
+  }
+  .header-right {
+    gap: 10px;
+  }
+  .notification sup {
+    top: -3px;
+    right: -5px;
+  }
+}

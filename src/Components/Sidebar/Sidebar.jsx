@@ -54,23 +54,23 @@ function Sidebar() {
         <hr style={{ opacity: "0.6" }} />
 
         <nav className="menu">
-          <Link to={"/admin/dashboard"} onClick={closeSidebar}>
+          <Link to={"/teacher/dashboard"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faHouse} className="house" />{" "}
             <span>Dashboard</span>
           </Link>
-          <Link to={"/admin/profile"} onClick={closeSidebar}>
+          <Link to={"/teacher/profile"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faUser} className="user" />{" "}
             <span>My Profile</span>
           </Link>
-          <Link to={"/admin/schedule"} onClick={closeSidebar}>
+          <Link to={"/teacher/schedule"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faCalendar} className="calendar" />{" "}
             <span>Lesson Schedule</span>
           </Link>
-          <Link to={"/admin/notifications"} onClick={closeSidebar}>
+          <Link to={"/teacher/notifications"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faBell} className="bell" />{" "}
             <span>Notifications</span>
           </Link>
-          <Link to={"/admin/analytics"} onClick={closeSidebar}>
+          <Link to={"/teacher/analytics"} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faChartLine} className="analytics" />{" "}
             <span>Analytics</span>
           </Link>

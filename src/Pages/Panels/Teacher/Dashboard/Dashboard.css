@@ -1,0 +1,219 @@
+/* ============================
+   🎓 Academic Dashboard Theme
+============================ */
+
+.body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: var(--transition);
+  font-family: "Inter", "Poppins", sans-serif;
+}
+
+/* Loader */
+.loader-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.loader {
+  width: 45px;
+  height: 45px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Welcome Section */
+.welcome-card {
+  background: var(--card-bg);
+  border-left: 6px solid var(--primary-color);
+  box-shadow: var(--shadow-light);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.welcome-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.welcome-icon {
+  font-size: 2rem;
+  color: var(--primary-color);
+  background: rgba(37, 99, 235, 0.1);
+  padding: 1rem;
+  border-radius: 50%;
+}
+
+.welcome-card h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.welcome-card p {
+  margin: 0.3rem 0 0;
+  color: var(--subtext-color);
+  font-size: 0.95rem;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.stats-box {
+  flex: 1;
+  min-width: 220px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+  text-align: center;
+  padding: 1.5rem 1rem;
+  transition: var(--transition);
+}
+
+.stats-box:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-medium);
+}
+
+.stats-box svg {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.stats-box .number {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.stats-box .text {
+  color: var(--subtext-color);
+  font-size: 0.9rem;
+}
+
+/* Classes / Academic Cards */
+.classes-container {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-light);
+}
+
+.my-classes h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
+
+.class-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.08),
+    rgba(124, 58, 237, 0.1)
+  );
+  padding: 1.2rem 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  margin-bottom: 1rem;
+  transition: var(--transition);
+}
+
+.class-card:hover {
+  transform: translateY(-4px);
+  background: linear-gradient(
+    135deg,
+    rgba(37, 99, 235, 0.12),
+    rgba(124, 58, 237, 0.14)
+  );
+  border-color: var(--accent-color);
+  box-shadow: var(--shadow-medium);
+}
+
+.class-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.class-icon {
+  width: 50px;
+  height: 50px;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 3px 6px rgba(37, 99, 235, 0.2);
+}
+
+/* Subtle Animations */
+.fade-in-up {
+  animation: fadeInUp 0.7s ease both;
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .body {
+    padding: 1rem;
+  }
+
+  .welcome-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .stats {
+    flex-direction: column;
+  }
+
+  .class-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

@@ -1,14 +1,79 @@
-:root[data-theme="dark"] {
-  --text-color: #ffffff;
-  --bg-color: #111111;
+:root[data-theme="light"] {
+  --bg-color: #f6f8fb;
+  --card-bg: #ffffff;
+  --text-color: #1e1e1e;
+  --subtext-color: #5f6368;
+  --border-color: #e3e6eb;
+  
+  /* Academic-friendly accent colors */
+  --primary-color: #2563eb; /* calm blue */
+  --secondary-color: #7c3aed; /* purple for highlights */
+  --accent-color: #0ea5e9; /* sky blue for active states */
+
+  --gradient: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+  --shadow-light: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --radius: 10px;
+  --transition: all 0.3s ease;
 }
 
-:root[data-theme="light"] {
-  --text-color: #111111;
-  --bg-color: #f8f9fa;
+:root[data-theme="dark"] {
+  --bg-color: #0f172a;
+  --card-bg: #1e293b;
+  --text-color: #f1f5f9;
+  --subtext-color: #94a3b8;
+  --border-color: #334155;
+  
+  /* Keep same palette, slightly brighter */
+  --primary-color: #3b82f6;
+  --secondary-color: #8b5cf6;
+  --accent-color: #38bdf8;
+
+  --gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  --shadow-light: 0 2px 6px rgba(255, 255, 255, 0.05);
+  --shadow-medium: 0 4px 12px rgba(255, 255, 255, 0.08);
+  --radius: 10px;
+  --transition: all 0.3s ease;
 }
+
+/* Default body styles */
 body {
-  background-color: var(--bg-color);
+  background: var(--bg-color);
   color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: "Poppins", "Inter", system-ui, sans-serif;
+  transition: var(--transition);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Scrollbar */
+body::-webkit-scrollbar {
+  width: 8px;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 10px;
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-color);
+}
+body::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+/* Global transitions */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+/* Links, buttons, highlights */
+a, button {
+  color: var(--primary-color);
+  transition: var(--transition);
+}
+
+a:hover, button:hover {
+  color: var(--secondary-color);
 }
