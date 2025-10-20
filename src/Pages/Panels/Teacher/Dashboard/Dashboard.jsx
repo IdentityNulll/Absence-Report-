@@ -7,7 +7,7 @@ import {
   faBookOpen,
   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
-import "./Dashboard.css"; 
+import "./Dashboard.css";
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,6 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    // Simulate fetching
     const timer = setTimeout(() => {
       setStudents(dummyData.students);
       setClasses(dummyData.classes);
@@ -42,55 +41,55 @@ function Dashboard() {
 
   if (loading) {
     return (
-      <div className="loader-container">
-        <div className="loader"></div>
+      <div className="tdb-loader-container">
+        <div className="tdb-loader"></div>
       </div>
     );
   }
 
   return (
-    <div className="body">
+    <div className="tdb-body">
       <Header />
       {/* <Sidebar /> */}
 
       {/* Welcome Card */}
-      <div className="welcome-card fade-in-right">
-        <div className="welcome-left">
-          <div className="welcome-icon">
+      <div className="tdb-welcome-card tdb-fade-in-right">
+        <div className="tdb-welcome-left">
+          <div className="tdb-welcome-icon">
             <FontAwesomeIcon icon={faGraduationCap} />
           </div>
           <div>
             <h3>Welcome back, {teacherName}!</h3>
-            <p>Here's an overview of your classes and students.</p>
+            <p>Here’s an overview of your classes and students.</p>
           </div>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="stats fade-in-left">
-        <div className="stats-box item1">
+      <div className="tdb-stats tdb-fade-in-up">
+        <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faBookOpen} />
-          <p className="number">{classes.length}</p>
-          <p className="text">Classes</p>
+          <p className="tdb-number">{classes.length}</p>
+          <p className="tdb-text">Classes</p>
         </div>
-        <div className="stats-box item2">
+        <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faUsers} />
-          <p className="number">{students.length}</p>
-          <p className="text">Students</p>
+          <p className="tdb-number">{students.length}</p>
+          <p className="tdb-text">Students</p>
         </div>
       </div>
 
-      {/* Classes List */}
-      <div className="classes-container fade-in-up">
-        <div className="my-classes">
+      {/* Classes Section */}
+      <div className="tdb-classes-container tdb-fade-in-up">
+        <div className="tdb-my-classes">
           <h3>
             <FontAwesomeIcon icon={faBookOpen} /> My Classes
           </h3>
 
           {classes.map((cls) => (
-            <div className="class-card purple" key={cls.id}>
-              <div className="class-left">
-                <div className="class-icon">
+            <div className="tdb-class-card" key={cls.id}>
+              <div className="tdb-class-left">
+                <div className="tdb-class-icon">
                   {cls.name.slice(0, 2).toUpperCase()}
                 </div>
                 <div>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./Schedule.css";
+import "./SSchedule.css";
 import Header from "../../../../Components/header/Header"
 
 function Schedule() {

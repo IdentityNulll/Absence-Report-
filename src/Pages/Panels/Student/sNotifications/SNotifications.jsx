@@ -1,0 +1,117 @@
+import React, { useState, useEffect } from "react";
+import "./SNotifications.css";
+import Header from "../../../../Components/studentHeader/SHeader";
+// import api from "../../../api/axios";
+import Loader from "../../../../Components/loader/Loader";
+
+function Notifications() {
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [newNotification, setNewNotification] = useState({
+    title: "",
+    message: "",
+  });
+
+  const senderId = localStorage.getItem("id");
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await api.get("/notification/all");
+        setNotifications(res.data.data || []);
+      } catch (err) {
+        console.error("Failed to fetch notifications:", err);
+        setNotifications([
+          {
+            id: 1,
+            title: "Fallback Notification",
+            message: "Something went wrong with the backend.",
+          },
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  return (
+    <div className="notifications-page">
+      <Header />
+
+      <div className="container12">
+        <div className="notifications-container">
+          <div className="notifications-header">
+            <h2 className="page-title">Notifications</h2>
+          </div>
+
+          {/* Notifications List */}
+          <div className="notifications-list-card">
+            {loading ? (
+              <Loader />
+            ) : notifications.length === 0 ? (
+              <p className="empty-text">No notifications yet</p>
+            ) : (
+              notifications.map((n, index) => (
+                <div key={n.id || index} className="notification-card">
+                  <div className="notification-content">
+                    <h4>{n.title}</h4>
+                    {n.message && <p>{n.message}</p>}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Popup Modal */}
+      {showPopup && (
+        <div className="popup-overlay">
+          <div className="popup-card">
+            <h3>Create Notification</h3>
+
+            <input
+              type="text"
+              placeholder="Title"
+              value={newNotification.title}
+              onChange={(e) =>
+                setNewNotification({
+                  ...newNotification,
+                  title: e.target.value,
+                })
+              }
+            />
+
+            <textarea
+              placeholder="Message"
+              value={newNotification.message}
+              onChange={(e) =>
+                setNewNotification({
+                  ...newNotification,
+                  message: e.target.value,
+                })
+              }
+            ></textarea>
+
+            <div className="popup-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowPopup(false)}
+              >
+                Cancel
+              </button>
+              <button className="save-btn" onClick={handleCreate}>
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default Notifications;
