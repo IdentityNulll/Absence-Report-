@@ -1,12 +1,22 @@
+/* Main body layout */
 .body {
   background: var(--bg-color);
   color: var(--text-color);
-  /* padding: 2rem; */
   min-height: 100vh;
-  
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 20px;
+  /* padding: 3rem 1rem; */
+}
+
+/* Center container (max width 1440px) */
+.container {
+  width: 100%;
+  max-width: 1440px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 /* Welcome card */
@@ -14,9 +24,25 @@
   background: var(--card-bg);
   box-shadow: var(--shadow-light);
   border-radius: var(--radius);
-  padding: 1.5rem 2rem;
-  margin-bottom: rem;
+  padding: 1.8rem 2.2rem;
   border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.welcome-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.welcome-card h3 {
+  color: var(--primary-color);
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.welcome-card p {
+  color: var(--subtext-color);
+  font-size: 0.95rem;
 }
 
 /* Attendance container */
@@ -26,20 +52,29 @@
   padding: 2rem;
   box-shadow: var(--shadow-medium);
   border: 1px solid var(--border-color);
+  transition: var(--transition);
+}
+
+.attendance-container:hover {
+  transform: translateY(-3px);
 }
 
 .attendance-container h3 {
   margin-bottom: 1.5rem;
   color: var(--primary-color);
+  font-size: 1.3rem;
+  text-align: center;
 }
 
+/* Options grid */
 .attendance-options {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
+/* Buttons */
 .attendance-btn {
   background: var(--gradient);
   border: none;
@@ -54,6 +89,7 @@
   gap: 0.6rem;
   box-shadow: var(--shadow-light);
   transition: var(--transition);
+  text-transform: capitalize;
 }
 
 .attendance-btn:hover {
@@ -66,11 +102,27 @@
   color: #fff;
 }
 
+/* Reason options */
+.reason-options {
+  background: var(--bg-color);
+  border-radius: var(--radius);
+  border: 1px dashed var(--border-color);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-light);
+}
+
+.reason-options h4 {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 /* Submit button */
 .submit-btn {
   background: var(--primary-color);
   color: #fff;
-  padding: 0.9rem 2rem;
+  padding: 0.9rem 2.5rem;
   border-radius: var(--radius);
   border: none;
   font-weight: 600;
@@ -78,6 +130,7 @@
   transition: var(--transition);
   display: block;
   margin: 0 auto;
+  font-size: 1rem;
 }
 
 .submit-btn:hover {
@@ -90,13 +143,14 @@
   margin-top: 2rem;
   color: var(--accent-color);
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .submitted-status svg {
   margin-right: 8px;
 }
 
-/* Simple loader */
+/* Loader */
 .loader-container {
   display: flex;
   justify-content: center;
@@ -108,8 +162,8 @@
   border: 5px solid var(--border-color);
   border-top: 5px solid var(--accent-color);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   animation: spin 1s linear infinite;
 }
 
@@ -135,7 +189,7 @@
 @keyframes fadeInUp {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(15px);
   }
   100% {
     opacity: 1;
@@ -146,7 +200,7 @@
 @keyframes fadeInRight {
   0% {
     opacity: 0;
-    transform: translateX(20px);
+    transform: translateX(25px);
   }
   100% {
     opacity: 1;

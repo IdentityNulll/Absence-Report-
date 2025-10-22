@@ -13,16 +13,17 @@ import SDashboard from "./Pages/Panels/Student/dashboard/SDashboard";
 import SProfile from "./Pages/Panels/Student/sProfile/SProfile";
 import SNotifications from "./Pages/Panels/Student/sNotifications/SNotifications";
 import SSchedule from "./Pages/Panels/Student/sSchedule/SSchedule";
-import AdminAnimate from "./Components/Animation/AdminAnimate"
+import AdminAnimate from "./Components/Animation/AdminAnimate";
+import ChangePassword from "./Components/changePassword/ChangePassword";
+import SAnalytics from "./Pages/Panels/Student/analytics/Analytics"
 
 function App() {
   return (
     <div>
-
-      <AdminAnimate/>
-      {/* <Login/> */}
+      <AdminAnimate />
       <Routes>
-        
+        <Route path="/changepassword" element={<ChangePassword />} />
+
         {/* Teacher */}
         <Route path="/" element={<Login />} />
         <Route path={"/teacher/dashboard"} element={<Dashboard />} />
@@ -37,6 +38,7 @@ function App() {
         <Route path={"/student/profile"} element={<SProfile />} />
         <Route path={"/student/notifications"} element={<SNotifications />} />
         <Route path={"/student/schedule"} element={<SSchedule />} />
+        <Route path={"/student/analytics"} element={<SAnalytics/>}/>
       </Routes>
     </div>
   );

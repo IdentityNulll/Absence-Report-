@@ -12,7 +12,8 @@ import "./SDashboard.css";
 
 function SDashboard() {
   const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState("");
+  const [mainStatus, setMainStatus] = useState("");
+  const [reason, setReason] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [studentName, setStudentName] = useState("Alex Carter");
 
@@ -21,13 +22,21 @@ function SDashboard() {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleSelect = (status) => {
-    setSelected(status);
+  const handleMainSelect = (status) => {
+    setMainStatus(status);
+    setReason("");
+    setSubmitted(false);
+  };
+
+  const handleReasonSelect = (r) => {
+    setReason(r);
     setSubmitted(false);
   };
 
   const handleSubmit = () => {
-    if (!selected) return alert("Please select a status first!");
+    if (!mainStatus) return alert("Please select Absent or Late first!");
+    if (mainStatus === "Absent" && !reason)
+      return alert("Please select a reason for being absent!");
     setSubmitted(true);
   };
 
@@ -41,67 +50,94 @@ function SDashboard() {
 
   return (
     <div className="body">
-      <Header />
-      {/* <Sidebar /> */}
+        <Header />
+      <div className="container">
 
-      {/* Welcome */}
-      <div className="welcome-card fade-in-right">
-        <div>
-          <h3>Welcome, {studentName}!</h3>
-          <p>Please report your attendance for today below 👇</p>
-        </div>
-      </div>
-
-      {/* Attendance Options */}
-      <div className="attendance-container fade-in-up">
-        <h3>Attendance Status</h3>
-        <div className="attendance-options">
-          <button
-            className={`attendance-btn ${
-              selected === "Sick" ? "active" : ""
-            }`}
-            onClick={() => handleSelect("Sick")}
-          >
-            <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
-          </button>
-          <button
-            className={`attendance-btn ${
-              selected === "Family Problem" ? "active" : ""
-            }`}
-            onClick={() => handleSelect("Family Problem")}
-          >
-            <FontAwesomeIcon icon={faUserXmark} /> Family Problem
-          </button>
-          <button
-            className={`attendance-btn ${
-              selected === "Late" ? "active" : ""
-            }`}
-            onClick={() => handleSelect("Late")}
-          >
-            <FontAwesomeIcon icon={faUserClock} /> Late
-          </button>
-          <button
-            className={`attendance-btn ${
-              selected === "Absent" ? "active" : ""
-            }`}
-            onClick={() => handleSelect("Absent")}
-          >
-            <FontAwesomeIcon icon={faUserXmark} /> Absent
-          </button>
-        </div>
-
-        <button className="submit-btn" onClick={handleSubmit}>
-          Submit
-        </button>
-
-        {submitted && (
-          <div className="submitted-status fade-in">
-            <FontAwesomeIcon icon={faCheckCircle} />
-            <p>
-              Attendance submitted as <strong>{selected}</strong>. Thank you!
-            </p>
+        {/* Welcome */}
+        <div className="welcome-card fade-in-right">
+          <div>
+            <h3>Welcome, {studentName}!</h3>
+            <p>Please report your attendance for today below 👇</p>
           </div>
-        )}
+        </div>
+
+        {/* Attendance Section */}
+        <div className="attendance-container fade-in-up">
+          <h3>Attendance Status</h3>
+
+          {/* Main Options */}
+          <div className="attendance-options">
+            <button
+              className={`attendance-btn ${
+                mainStatus === "Absent" ? "active" : ""
+              }`}
+              onClick={() => handleMainSelect("Absent")}
+            >
+              <FontAwesomeIcon icon={faUserXmark} /> Absent
+            </button>
+            <button
+              className={`attendance-btn ${
+                mainStatus === "Late" ? "active" : ""
+              }`}
+              onClick={() => handleMainSelect("Late")}
+            >
+              <FontAwesomeIcon icon={faUserClock} /> Late
+            </button>
+          </div>
+
+          {/* Show reasons only if Absent */}
+          {mainStatus === "Absent" && (
+            <div className="reason-options fade-in-up">
+              <h4>Select your reason</h4>
+              <div className="attendance-options">
+                <button
+                  className={`attendance-btn ${
+                    reason === "Sick" ? "active" : ""
+                  }`}
+                  onClick={() => handleReasonSelect("Sick")}
+                >
+                  <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
+                </button>
+                <button
+                  className={`attendance-btn ${
+                    reason === "Family Problem" ? "active" : ""
+                  }`}
+                  onClick={() => handleReasonSelect("Family Problem")}
+                >
+                  <FontAwesomeIcon icon={faUserXmark} /> Family Problem
+                </button>
+                <button
+                  className={`attendance-btn ${
+                    reason === "Cannot Go" ? "active" : ""
+                  }`}
+                  onClick={() => handleReasonSelect("Cannot Go")}
+                >
+                  <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Submit button */}
+          <button className="submit-btn" onClick={handleSubmit}>
+            Submit
+          </button>
+
+          {/* Submitted result */}
+          {submitted && (
+            <div className="submitted-status fade-in">
+              <FontAwesomeIcon icon={faCheckCircle} />
+              <p>
+                Attendance submitted as{" "}
+                <strong>
+                  {mainStatus}
+                  {reason ? ` (${reason})` : ""}
+                </strong>
+                . Thank you!
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

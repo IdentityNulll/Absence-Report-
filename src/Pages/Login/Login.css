@@ -61,6 +61,10 @@ input {
     transform: translate(-50%, -50%);
   }
 }
+
+.input-group>svg {
+  color: #1e1e1e;
+}
 .login-title {
   font-size: 35px;
   color: #1e1e1e;

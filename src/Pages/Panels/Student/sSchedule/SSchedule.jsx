@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SSchedule.css";
-import Header from "../../../../Components/header/Header"
+import Header from "../../../../Components/studentHeader/SHeader"
 
 function Schedule() {
   const [selectedDate, setSelectedDate] = useState(() => new Date());

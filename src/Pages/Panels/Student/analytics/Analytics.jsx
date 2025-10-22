@@ -13,7 +13,7 @@ import {
   Cell,
 } from "recharts";
 import "./Analytics.css";
-import Header from "../../../../Components/header/Header";
+import Header from "../../../../Components/studentHeader/SHeader";
 
 // Line chart data
 const data = [
@@ -26,16 +26,16 @@ const data = [
 
 // Pie chart dummy data
 const attendanceSummary = [
-  { name: "Present", value: 130 },
-  { name: "Absent", value: 10 },
-  { name: "Sick", value: 5 },
-  { name: "Family", value: 3 },
-  { name: "Late", value: 4 },
+  { name: "Present", value: 20 },
+  { name: "Absent", value: 3 },
+  { name: "Sick", value: 1 },
+  { name: "Family", value: 0 },
+  { name: "Late", value: 2 },
 ];
 
 const absenceReasons = [
-  { name: "Sick", value: 8 },
-  { name: "Family", value: 5 },
+  { name: "Sick", value: 1 },
+  { name: "Family", value: 0 },
   { name: "Other", value: 2 },
 ];
 
