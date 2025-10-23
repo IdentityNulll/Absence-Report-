@@ -17,7 +17,7 @@
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 25px;
-  color: var(--text-color);
+  color: var(--text-color); 
   border-bottom: 2px solid var(--main-color);
   display: inline-block;
   padding-bottom: 6px;
