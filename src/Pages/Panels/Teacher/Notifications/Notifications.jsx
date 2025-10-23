@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Notifications.css";
 import Header from "../../../../Components/header/Header";
-// import api from "../../../api/axios";
 import Loader from "../../../../Components/loader/Loader";
 
 function Notifications() {
@@ -13,54 +12,30 @@ function Notifications() {
     message: "",
   });
 
-  const senderId = localStorage.getItem("id");
-
+  // Simulate fetch with dummy data
   useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await api.get("/notification/all");
-        setNotifications(res.data.data || []);
-      } catch (err) {
-        console.error("Failed to fetch notifications:", err);
-        setNotifications([
-          {
-            id: 1,
-            title: "Fallback Notification",
-            message: "Something went wrong with the backend.",
-          },
-        ]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNotifications();
+    setTimeout(() => {
+      setNotifications([
+        {
+          id: 1,
+          title: "Class Reminder",
+          message: "Your Math class starts at 10:00 AM.",
+        },
+        {
+          id: 2,
+          title: "Exam Update",
+          message: "Physics exam has been postponed to Friday.",
+        },
+        {
+          id: 3,
+          title: "Holiday Notice",
+          message: "School will be closed next Monday.",
+        },
+      ]);
+      setLoading(false);
+    }, 1000);
   }, []);
 
-  // ✅ Create new notification
-  const handleCreate = async () => {
-    if (!newNotification.title || !newNotification.message) {
-      alert("Please fill in both fields!");
-      return;
-    }
-
-    try {
-      const res = await api.post("/notification/add", {
-        sender: senderId,
-        recipient: [senderId],
-        title: newNotification.title,
-        message: newNotification.message,
-      });
-
-      setNotifications((prev) => [res.data.data, ...prev]);
-
-      setNewNotification({ title: "", message: "" });
-      setShowPopup(false);
-    } catch (err) {
-      console.error("Failed to add notification:", err);
-      alert("Failed to create notification.");
-    }
-  };
 
   return (
     <div className="notifications-page">
@@ -72,7 +47,6 @@ function Notifications() {
             <h2 className="page-title">Notifications</h2>
           </div>
 
-          {/* Notifications List */}
           <div className="notifications-list-card">
             {loading ? (
               <Loader />
@@ -92,7 +66,7 @@ function Notifications() {
         </div>
       </div>
 
-      {/* Popup Modal */}
+      {/* Popup */}
       {showPopup && (
         <div className="popup-overlay">
           <div className="popup-card">
