@@ -167,6 +167,23 @@
   animation: spin 1s linear infinite;
 }
 
+.comment-input {
+  background: var(--gradient);
+  border: none;
+  padding: 1rem;
+  border-radius: var(--radius);
+  /* cursor: pointer; */
+  font-weight: 600;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: var(--shadow-light);
+  /* transition: var(--transition); */
+  /* text-transform: capitalize; */
+}
+
 @keyframes spin {
   100% {
     transform: rotate(360deg);
@@ -209,6 +226,10 @@
 }
 
 @keyframes fadeIn {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

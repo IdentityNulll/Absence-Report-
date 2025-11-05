@@ -114,6 +114,7 @@ function SDashboard() {
                 >
                   <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
                 </button>
+                <input type="text" placeholder="Leave a comment"  className="comment-input"/>
               </div>
             </div>
           )}
