@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import "./Login.css";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,6 +6,22 @@ import { faEye, faEyeSlash, faUser } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
+import api from "../../api/axios";
+
+// ✅ define outside component so it's not re-created each render
+const SplineFrame = memo(() => (
+  <iframe
+    src="https://my.spline.design/r4xbot-glm2ThTI8CPTrAX41n5mkl9V/"
+    width="100%"
+    height="1100px"
+    className="frame"
+    frameBorder="0"
+    allowFullScreen
+    loading="lazy"
+    title="Spline Background"
+    sandbox="allow-scripts allow-same-origin"
+  ></iframe>
+));
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,17 +29,56 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+    if (token) {
+      if (role === "STUDENT") navigate("/student/dashboard");
+      else if (role === "TEACHER") navigate("/teacher/dashboard");
+    }
+  }, [navigate]);
 
-    if (email === "teacher@example.com" && password === "1234") {
-      toast.success("Welcome, Teacher!");
-      setTimeout(() => navigate("/teacher/dashboard"), 1500);
-    } else if (email === "student@example.com" && password === "1234") {
-      toast.success("Welcome, Student!");
-      setTimeout(() => navigate("/student/dashboard"), 1500);
-    } else {
-      toast.error("Invalid credentials");
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await api.post("/auth/login", {
+        mail: email,
+        password,
+      });
+
+      // Axios puts your response data here
+      console.log(response.data);
+
+      // Example: backend returns token and role
+      if (response.data?.token) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("role", response.data.role);
+
+        toast.success("Login Successful!");
+        setTimeout(() => {
+          if (response.data.role === "STUDENT") navigate("/student/dashboard");
+          else if (response.data.role === "TEACHER")
+            navigate("/teacher/dashboard");
+        }, 1500);
+      } else {
+        toast.error("Invalid response from server.");
+      }
+    } catch (error) {
+      console.error(error);
+
+      // Show the exact backend error if available
+      if (error.response?.data) {
+        toast.error(
+          error.response.data.password ||
+            error.response.data.message ||
+            "Login failed"
+        );
+      } else {
+        toast.error("Incorrect Email or Password");
+      }
+
+      setPassword("");
+      setEmail("");
     }
   };
 
@@ -31,7 +86,7 @@ function Login() {
     <div className="login-body">
       <div className="login-form">
         <h2 className="login-title">Welcome Back</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleLogin}>
           <div className="input-group">
             <input
               type="email"
@@ -75,12 +130,7 @@ function Login() {
         </form>
       </div>
 
-      <iframe
-        src="https://my.spline.design/r4xbot-glm2ThTI8CPTrAX41n5mkl9V/"
-        width="100%"
-        height="1100px"
-        className="frame"
-      ></iframe>
+      {/* <SplineFrame /> */}
 
       <ToastContainer />
     </div>
