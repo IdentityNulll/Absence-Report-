@@ -46,18 +46,20 @@ function Login() {
         password,
       });
 
+
+
       // Axios puts your response data here
       console.log(response.data);
 
       // Example: backend returns token and role
-      if (response.data?.token) {
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("role", response.data.role);
+      if (response.data.data?.token) {
+        localStorage.setItem("token", response.data.data.token);
+        localStorage.setItem("role", response.data.data.role);
 
         toast.success("Login Successful!");
         setTimeout(() => {
-          if (response.data.role === "STUDENT") navigate("/student/dashboard");
-          else if (response.data.role === "TEACHER")
+          if (response.data.data.role === "STUDENT") navigate("/student/dashboard");
+          else if (response.data.data.role === "TEACHER")
             navigate("/teacher/dashboard");
         }, 1500);
       } else {
@@ -81,6 +83,7 @@ function Login() {
       setEmail("");
     }
   };
+
 
   return (
     <div className="login-body">
