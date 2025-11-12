@@ -190,6 +190,58 @@
   }
 }
 
+
+.report-card {
+  margin-top: 30px;
+  background: #f8f9fb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  animation: fadeIn 0.4s ease;
+}
+
+.report-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.report-header h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.success-icon {
+  color: #2e7d32;
+  font-size: 24px;
+}
+
+.report-details p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.report-details strong {
+  color: #111;
+}
+
+.report-footer {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.success-msg {
+  color: #2e7d32;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+
 /* Animations */
 .fade-in-up {
   animation: fadeInUp 0.6s ease both;

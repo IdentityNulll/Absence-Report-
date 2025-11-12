@@ -50,7 +50,11 @@ function Login() {
 
       // Axios puts your response data here
       console.log(response.data);
-
+      if (response.data.data?.currentUserId) {
+        localStorage.setItem("id", response.data.data?.currentUserId)
+      }else {
+        console.log("Id error")
+      }
       // Example: backend returns token and role
       if (response.data.data?.token) {
         localStorage.setItem("token", response.data.data.token);
@@ -83,6 +87,7 @@ function Login() {
       setEmail("");
     }
   };
+
 
 
   return (
