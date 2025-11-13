@@ -35,7 +35,7 @@ function App() {
 
         {/* student */}
         <Route path={"/student/dashboard"} element={<SDashboard />} />
-        <Route path={"/student/profile"} element={<SProfile />} />
+        <Route path={"/student/:id"} element={<SProfile />} />
         <Route path={"/student/notifications"} element={<SNotifications />} />
         <Route path={"/student/schedule"} element={<SSchedule />} />
         <Route path={"/student/analytics"} element={<SAnalytics/>}/>
