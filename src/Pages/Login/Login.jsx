@@ -138,7 +138,7 @@ function Login() {
         </form>
       </div>
 
-      {/* <SplineFrame /> */}
+      <SplineFrame />
 
       <ToastContainer />
     </div>
