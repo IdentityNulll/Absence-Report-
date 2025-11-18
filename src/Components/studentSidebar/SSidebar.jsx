@@ -10,7 +10,7 @@ import {
   faUser,
   faCalendar,
   faBell,
-  faHouse
+  faHouse,
 } from "@fortawesome/free-regular-svg-icons";
 import "./SSidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
@@ -21,6 +21,7 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [student, setStudent] = useState(null);
   const navigate = useNavigate();
+  const [studentId, setStudentId] = useState(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
@@ -36,10 +37,12 @@ function Sidebar() {
       const id = localStorage.getItem("id");
       if (!id) return console.log("no id ");
 
+      setStudentId(id); // ← save it for JSX
+
       try {
         const response = await api.get(`/student/${id}`);
         setStudent(response.data?.data);
-        console.log(response)
+        console.log(response);
       } catch (err) {
         console.error("Failed to fetch student info:", err);
       }
@@ -81,7 +84,7 @@ function Sidebar() {
             <FontAwesomeIcon icon={faHouse} className="house" />{" "}
             <span>Home</span>
           </Link>
-          <Link to={``} onClick={closeSidebar}>
+          <Link to={`/student/${studentId}`} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faUser} className="user" />{" "}
             <span>My Profile</span>
           </Link>
