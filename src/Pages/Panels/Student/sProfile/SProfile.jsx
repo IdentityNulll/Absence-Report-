@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../../../Components/studentHeader/SHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faLock, faCalendarAlt, faEnvelope, faIdBadge } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUser,
+  faLock,
+  faCalendarAlt,
+  faEnvelope,
+} from "@fortawesome/free-solid-svg-icons";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loader from "../../../../Components/loader/Loader";
@@ -25,8 +30,11 @@ export default function SProfile() {
       try {
         const response = await api.get(`/student/${id}`);
         const data = response.data?.data;
-        setStudent(data);
-        setProfileImage(data.photoUrl || null);
+
+        if (data) {
+          setStudent(data);
+          setProfileImage(data.photoUrl || null);
+        }
       } catch (err) {
         console.error("Failed to load student profile:", err);
       } finally {
@@ -45,16 +53,17 @@ export default function SProfile() {
     }
   };
 
-  if (loading) {
-    return <Loader />;
-  }
+  if (loading) return <Loader />;
+  if (!student) return <p className="error">Failed to load profile.</p>;
 
   return (
     <div className="profile-wrapper">
       <Header />
-      <div className="profile-container fade-in">
-        <div className="profile-card">
-          <div className="profile-avatar">
+
+      <div className="profile-page">
+        <div className="profile-card-full">
+          {/* Avatar */}
+          <div className="profile-avatar-big">
             <input
               type="file"
               id="avatarUpload"
@@ -62,37 +71,47 @@ export default function SProfile() {
               onChange={handleImageChange}
               style={{ display: "none" }}
             />
-            <label htmlFor="avatarUpload" className="avatar-label">
+
+            <label htmlFor="avatarUpload" className="avatar-label-big">
               {profileImage ? (
-                <img src={profileImage} alt="Profile" className="avatar-img" />
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="avatar-img-big"
+                />
               ) : (
-                <FontAwesomeIcon icon={faUser} className="default-avatar" />
+                <FontAwesomeIcon icon={faUser} className="default-avatar-big" />
               )}
-              <div className="avatar-overlay">Change Photo</div>
+              <div className="avatar-overlay-big">Change Photo</div>
             </label>
           </div>
 
-          <h2 className="student-name">
+          {/* NAME */}
+          <h1 className="profile-name-big">
             {student.firstName} {student.lastName}
-          </h2>
-          <p className="student-role">{student.role}</p>
+          </h1>
 
-          <div className="profile-info">
-            <p>
-              <FontAwesomeIcon icon={faEnvelope} /> {student.email}
-            </p>
-            <p>
-              <FontAwesomeIcon icon={faCalendarAlt} />{" "}
-              {student.birthday
-                ? new Date(student.birthday).toLocaleDateString()
-                : "Not Provided"}
-            </p>
-            <p>
-              <FontAwesomeIcon icon={faIdBadge} /> ID: {student.id}
-            </p>
+          {/* ROLE */}
+          <p className="profile-role-big">{student.role}</p>
+
+          {/* INFO BOX */}
+          <div className="profile-info-box">
+            <div className="info-row">
+              <FontAwesomeIcon icon={faEnvelope} />
+              <span>{student.email}</span>
+            </div>
+
+            <div className="info-row">
+              <FontAwesomeIcon icon={faCalendarAlt} />
+              <span>
+                {student.birthday
+                  ? new Date(student.birthday).toLocaleDateString()
+                  : "Not Provided"}
+              </span>
+            </div>
           </div>
 
-          <Link to="/changepassword" className="btn-primary">
+          <Link to="/changepassword" className="btn-primary-big">
             <FontAwesomeIcon icon={faLock} /> Change Password
           </Link>
         </div>
