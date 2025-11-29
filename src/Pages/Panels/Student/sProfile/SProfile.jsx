@@ -62,7 +62,6 @@ export default function SProfile() {
 
       <div className="profile-page">
         <div className="profile-card-full">
-          {/* Avatar */}
           <div className="profile-avatar-big">
             <input
               type="file"
@@ -81,20 +80,17 @@ export default function SProfile() {
                 />
               ) : (
                 <FontAwesomeIcon icon={faUser} className="default-avatar-big" />
-              )}
+              )}@dost0n_murodullayev さん、本日27日15時（日本時間）で開始します。宜しくお願いします。
               <div className="avatar-overlay-big">Change Photo</div>
             </label>
           </div>
 
-          {/* NAME */}
           <h1 className="profile-name-big">
             {student.firstName} {student.lastName}
           </h1>
 
-          {/* ROLE */}
           <p className="profile-role-big">{student.role}</p>
 
-          {/* INFO BOX */}
           <div className="profile-info-box">
             <div className="info-row">
               <FontAwesomeIcon icon={faEnvelope} />

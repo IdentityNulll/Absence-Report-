@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Sidebar from "../../../../Components/Sidebar/Sidebar";
 import Header from "../../../../Components/studentHeader/SHeader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -34,17 +33,25 @@ function SDashboard() {
 
       try {
         const response = await api.get(`/attendance/${studentId}`);
-        const data = response.data?.data;
 
-        if (data) {
+        // Check if status is 200
+        if (response.status === 200 && response.data?.data) {
+          const data = response.data.data;
           setReport(data);
           const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
           setStudentName(fullName);
-          setIsLocked(true); // Disable new submission
+          setIsLocked(true);
           setSubmitted(true);
+        } else {
+          console.log("No attendance record yet for today or status not 200.");
         }
       } catch (err) {
-        console.log("No attendance record yet for today.");
+        // If 403 or other errors, handle gracefully
+        if (err.response && err.response.status === 403) {
+          console.log("Attendance check forbidden: 403");
+        } else {
+          console.log("No attendance record yet for today.", err.message);
+        }
       }
     };
 
@@ -89,7 +96,10 @@ function SDashboard() {
         comment: comment || "",
       };
 
-      const response = await api.post("/attendance", payload);
+      await api.post("/attendance", payload);
+
+      // After submission, immediately check attendance
+      const response = await api.get(`/attendance/${studentId}`);
       const data = response.data?.data;
 
       if (data?.studentResponseDto) {
