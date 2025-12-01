@@ -80,7 +80,7 @@ export default function SProfile() {
                 />
               ) : (
                 <FontAwesomeIcon icon={faUser} className="default-avatar-big" />
-              )}@dost0n_murodullayev さん、本日27日15時（日本時間）で開始します。宜しくお願いします。
+              )}
               <div className="avatar-overlay-big">Change Photo</div>
             </label>
           </div>
