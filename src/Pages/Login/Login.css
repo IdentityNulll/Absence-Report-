@@ -48,21 +48,12 @@ input {
   gap: 30px;
   opacity: 0;
   transform: translate(-50%, -45%);
-  animation: fadeInUp 0.8s ease-out forwards;
+  /* animation: fadeInUp 0.8s ease-out forwards; */
 }
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -55%);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
 
-.input-group>svg {
+
+.input-group > svg {
   color: #1e1e1e;
 }
 .login-title {
@@ -99,13 +90,59 @@ input {
   margin-top: 10px;
 }
 
-@keyframes popIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
+
+
+@media (max-width: 1024px) {
+  .login-form {
+    width: 70%;
+    left: 50%;
+    height: auto;
+    padding: 25px;
   }
-  to {
-    transform: scale(1);
-    opacity: 1;
+
+  .input-group {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .login-form {
+    width: 85%;
+    top: 12%;
+    padding: 20px;
+  }
+
+  .login-title {
+    font-size: 28px;
+  }
+
+  .frame {
+    height: 800px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-body {
+    height: 100vh;
+  }
+
+  .login-form {
+    width: 92%;
+    top: 18%;
+    padding: 15px;
+    gap: 20px;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+
+  .input-group {
+    width: 100%;
+    padding: 8px 14px;
+  }
+
+  .frame {
+    height: 700px !important;
   }
 }
