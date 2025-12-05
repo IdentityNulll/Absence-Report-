@@ -46,14 +46,12 @@ function Login() {
         password,
       });
 
-
-
       // Axios puts your response data here
       console.log(response.data);
       if (response.data.data?.currentUserId) {
-        localStorage.setItem("id", response.data.data?.currentUserId)
-      }else {
-        console.log("Id error")
+        localStorage.setItem("id", response.data.data?.currentUserId);
+      } else {
+        console.log("Id error");
       }
       // Example: backend returns token and role
       if (response.data.data?.token) {
@@ -62,7 +60,8 @@ function Login() {
 
         toast.success("Login Successful!");
         setTimeout(() => {
-          if (response.data.data.role === "STUDENT") navigate("/student/dashboard");
+          if (response.data.data.role === "STUDENT")
+            navigate("/student/dashboard");
           else if (response.data.data.role === "TEACHER")
             navigate("/teacher/dashboard");
         }, 1500);
@@ -87,8 +86,6 @@ function Login() {
       setEmail("");
     }
   };
-
-
 
   return (
     <div className="login-body">
@@ -138,7 +135,7 @@ function Login() {
         </form>
       </div>
 
-      <SplineFrame />
+      {window.innerWidth > 700 && <SplineFrame />}
 
       <ToastContainer />
     </div>
