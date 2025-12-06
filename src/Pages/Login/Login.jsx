@@ -13,7 +13,7 @@ const SplineFrame = memo(() => (
   <iframe
     src="https://my.spline.design/r4xbot-glm2ThTI8CPTrAX41n5mkl9V/"
     width="100%"
-    height="1100px"
+    height="1200px"
     className="frame"
     frameBorder="0"
     allowFullScreen
@@ -135,7 +135,7 @@ function Login() {
         </form>
       </div>
 
-      {window.innerWidth > 700 && <SplineFrame />}
+      {/* {window.innerWidth > 700 && <SplineFrame />} */}
 
       <ToastContainer />
     </div>

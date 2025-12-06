@@ -3,8 +3,7 @@
   width: 100%;
   height: 100vh;
   display: flex;
-  align-items: start;
-  padding-top: 80px;
+  align-items: center;
   justify-content: center;
   overflow: hidden !important;
 }
@@ -35,24 +34,33 @@ input {
 
 .login-form {
   z-index: 2;
-  width: 500px;
-  height: 340px;
+  width: 600px; /* increased from 500px */
+  height: 420px; /* increased from 340px */
   background-color: rgba(255, 255, 255, 0.274);
   box-shadow: 1px 1px 10px white;
   backdrop-filter: blur(10px);
   border-radius: 10px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  padding: 20px;
+  padding: 30px; /* increased for spacing */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 30px;
-  /* opacity: 0; */
-  /* transform: translate(-50%, -45%); */
-  /* animation: fadeInUp 0.8s ease-out forwards; */
+  gap: 35px; /* slightly bigger gap */
 }
 
+.input-group {
+  width: 350px; /* increased from 250px */
+  padding: 12px 22px; /* slightly bigger */
+}
 
+.login-title {
+  font-size: 40px; /* bigger title */
+}
+
+.login-btn {
+  width: 130px; /* bigger button */
+  padding: 12px;
+}
 
 .input-group > svg {
   color: #1e1e1e;
@@ -64,7 +72,7 @@ input {
 .input-group {
   border: 1px solid white;
   padding: 10px 20px;
-  width: 250px;
+  /* width: 250px; */
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,9 +99,11 @@ input {
   margin-top: 10px;
 }
 
-
-@media (max-width:500px) {
+@media (max-width: 500px) {
   .login-form {
     width: 320px;
+  }
+  .input-group {
+    width: 250px;
   }
 }

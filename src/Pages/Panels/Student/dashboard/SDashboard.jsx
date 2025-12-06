@@ -32,26 +32,20 @@ function SDashboard() {
       if (!studentId) return;
 
       try {
-        const response = await api.get(`/attendance/${studentId}`);
+        const response = await api.post("/attendance", { studentId });
 
-        // Check if status is 200
         if (response.status === 200 && response.data?.data) {
           const data = response.data.data;
           setReport(data);
+
           const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
           setStudentName(fullName);
+
           setIsLocked(true);
           setSubmitted(true);
-        } else {
-          console.log("No attendance record yet for today or status not 200.");
         }
       } catch (err) {
-        // If 403 or other errors, handle gracefully
-        if (err.response && err.response.status === 403) {
-          console.log("Attendance check forbidden: 403");
-        } else {
-          console.log("No attendance record yet for today.", err.message);
-        }
+        console.log("No attendance yet or forbidden:", err);
       }
     };
 
@@ -73,11 +67,10 @@ function SDashboard() {
 
   const handleSubmit = async () => {
     const studentId = localStorage.getItem("id");
-    if (!studentId) return alert("Student ID not found in localStorage!");
+    if (!studentId) return alert("Student ID not found!");
 
-    if (!mainStatus) return alert("Please select Absent or Late first!");
-    if (mainStatus === "Absent" && !reason)
-      return alert("Please select a reason for being absent!");
+    if (!mainStatus) return alert("Select Absent or Late first!");
+    if (mainStatus === "Absent" && !reason) return alert("Select a reason!");
 
     try {
       setSubmitting(true);
@@ -98,21 +91,19 @@ function SDashboard() {
 
       await api.post("/attendance", payload);
 
-      // After submission, immediately check attendance
-      const response = await api.get(`/attendance/${studentId}`);
-      const data = response.data?.data;
+      // re-check attendance
+      const res = await api.post("/attendance/report", { studentId });
+      const data = res.data.data;
 
-      if (data?.studentResponseDto) {
-        const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
-        setStudentName(fullName);
-      }
+      const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
+      setStudentName(fullName);
 
       setReport(data);
       setSubmitted(true);
       setIsLocked(true);
     } catch (err) {
-      console.error("Error submitting attendance:", err);
-      alert("Failed to submit attendance. Please try again.");
+      console.error("Submit error:", err);
+      alert("Failed to submit attendance.");
     } finally {
       setSubmitting(false);
     }
@@ -168,42 +159,44 @@ function SDashboard() {
             </div>
 
             {/* Show reasons only if Absent */}
-            {mainStatus === "Absent" && (
+            {mainStatus && (
               <div className="reason-options fade-in-up">
-                <h4>Select your reason</h4>
-                <div className="attendance-options">
-                  <button
-                    className={`attendance-btn ${
-                      reason === "Sick" ? "active" : ""
-                    }`}
-                    onClick={() => handleReasonSelect("Sick")}
-                  >
-                    <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
-                  </button>
-                  <button
-                    className={`attendance-btn ${
-                      reason === "Family Problem" ? "active" : ""
-                    }`}
-                    onClick={() => handleReasonSelect("Family Problem")}
-                  >
-                    <FontAwesomeIcon icon={faUserXmark} /> Family Problem
-                  </button>
-                  <button
-                    className={`attendance-btn ${
-                      reason === "Cannot Go" ? "active" : ""
-                    }`}
-                    onClick={() => handleReasonSelect("Cannot Go")}
-                  >
-                    <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
-                  </button>
-                  <input
-                    type="text"
-                    placeholder="Leave a comment"
-                    className="comment-input"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                  />
-                </div>
+                {mainStatus === "Absent" && <h4>Select your reason</h4>}
+                {mainStatus === "Absent" && (
+                  <div className="attendance-options">
+                    <button
+                      className={`attendance-btn ${
+                        reason === "Sick" ? "active" : ""
+                      }`}
+                      onClick={() => handleReasonSelect("Sick")}
+                    >
+                      <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
+                    </button>
+                    <button
+                      className={`attendance-btn ${
+                        reason === "Family Problem" ? "active" : ""
+                      }`}
+                      onClick={() => handleReasonSelect("Family Problem")}
+                    >
+                      <FontAwesomeIcon icon={faUserXmark} /> Family Problem
+                    </button>
+                    <button
+                      className={`attendance-btn ${
+                        reason === "Cannot Go" ? "active" : ""
+                      }`}
+                      onClick={() => handleReasonSelect("Cannot Go")}
+                    >
+                      <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
+                    </button>
+                  </div>
+                )}
+                <input
+                  type="text"
+                  placeholder="Leave a comment"
+                  className="comment-input"
+                  value={comment}
+                  onChange={(e) => setComment(e.target.value)}
+                />
               </div>
             )}
 
