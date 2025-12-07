@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import api from "../../../../api/axios";
 import "./SDashboard.css";
+import { toast } from "react-toastify";
 
 function SDashboard() {
   const [loading, setLoading] = useState(true);
@@ -21,37 +22,40 @@ function SDashboard() {
   const [submitting, setSubmitting] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
+  // Fake loader
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 600);
     return () => clearTimeout(timer);
   }, []);
 
+  // CHECK ATTENDANCE AUTOMATICALLY
   useEffect(() => {
     const checkAttendance = async () => {
       const studentId = localStorage.getItem("id");
       if (!studentId) return;
 
       try {
-        const response = await api.post("/attendance", { studentId });
-
-        if (response.status === 200 && response.data?.data) {
-          const data = response.data.data;
+        console.log(`📡 GET /attendance/by-userId/${studentId}`);
+        const getRes = await api.get(`/attendance/by-userId/${studentId}`);
+        console.log("📥 GET RESPONSE:", res.data);
+        if (res.status === 200 && res.data?.data) {
+          const data = res.data.data;
           setReport(data);
-
-          const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
-          setStudentName(fullName);
-
+          setStudentName(
+            `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`
+          );
           setIsLocked(true);
           setSubmitted(true);
         }
       } catch (err) {
-        console.log("No attendance yet or forbidden:", err);
+        console.log("❌ No attendance yet");
       }
     };
 
     checkAttendance();
   }, []);
 
+  // Handle ABSENT/LATE selection
   const handleMainSelect = (status) => {
     if (isLocked) return;
     setMainStatus(status);
@@ -59,50 +63,66 @@ function SDashboard() {
     setSubmitted(false);
   };
 
+  // Handle reason selection
   const handleReasonSelect = (r) => {
     if (isLocked) return;
     setReason(r);
-    setSubmitted(false);
   };
 
+  // SUBMIT ATTENDANCE
   const handleSubmit = async () => {
     const studentId = localStorage.getItem("id");
-    if (!studentId) return alert("Student ID not found!");
+    if (!studentId) return alert("Student ID missing!");
 
     if (!mainStatus) return alert("Select Absent or Late first!");
-    if (mainStatus === "Absent" && !reason) return alert("Select a reason!");
+
+    // Late does NOT need a reason
+    if (mainStatus === "Absent" && !reason)
+      return toast.error("Select a reason for absence!");
 
     try {
       setSubmitting(true);
 
+      // Build payload
       const payload = {
         studentId,
         reason:
-          reason === "Sick"
+          mainStatus === "Late"
+            ? null
+            : reason === "Sick"
             ? "SICK"
             : reason === "Family Problem"
             ? "FAMILY_MATTER"
             : reason === "Cannot Go"
-            ? "CANNOT_GO"
-            : "OTHER",
+            ? "TRAVELING"
+            : "EMERGENCY",
+
         reasonType: mainStatus.toUpperCase(),
-        comment: comment || "",
+
+        comment: comment || "No comment",
       };
 
-      await api.post("/attendance", payload);
+      const postRes = await api.post("/attendance", payload);
 
-      // re-check attendance
-      const res = await api.post("/attendance/report", { studentId });
-      const data = res.data.data;
+      console.log("📥 POST RESPONSE:", postRes.data);
 
-      const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
-      setStudentName(fullName);
+      // Now re-fetch using GET
+      console.log("📡 GET /attendance/" + studentId);
+      const getRes = await api.get(`/attendance/by-userId/${studentId}`);
+
+      console.log("📥 RE-FETCH RESPONSE:", getRes.data);
+
+      const data = getRes.data.data;
 
       setReport(data);
-      setSubmitted(true);
+      setStudentName(
+        `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`
+      );
+
       setIsLocked(true);
+      setSubmitted(true);
     } catch (err) {
-      console.error("Submit error:", err);
+      console.error("❌ Submit error:", err);
       alert("Failed to submit attendance.");
     } finally {
       setSubmitting(false);
@@ -124,9 +144,9 @@ function SDashboard() {
         {/* Welcome */}
         <div className="welcome-card fade-in-right">
           <div>
-            <h3>Welcome, {studentName ? studentName : "Student"}!</h3>
+            <h3>Welcome, {studentName || "Student"}!</h3>
             {!isLocked ? (
-              <p>Please report your attendance for today below 👇</p>
+              <p>Please report your attendance below 👇</p>
             ) : (
               <p>Your attendance for today has already been recorded ✅</p>
             )}
@@ -158,49 +178,49 @@ function SDashboard() {
               </button>
             </div>
 
-            {/* Show reasons only if Absent */}
-            {mainStatus && (
+            {/* Only show reasons if Absent */}
+            {mainStatus === "Absent" && (
               <div className="reason-options fade-in-up">
-                {mainStatus === "Absent" && <h4>Select your reason</h4>}
-                {mainStatus === "Absent" && (
-                  <div className="attendance-options">
-                    <button
-                      className={`attendance-btn ${
-                        reason === "Sick" ? "active" : ""
-                      }`}
-                      onClick={() => handleReasonSelect("Sick")}
-                    >
-                      <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
-                    </button>
-                    <button
-                      className={`attendance-btn ${
-                        reason === "Family Problem" ? "active" : ""
-                      }`}
-                      onClick={() => handleReasonSelect("Family Problem")}
-                    >
-                      <FontAwesomeIcon icon={faUserXmark} /> Family Problem
-                    </button>
-                    <button
-                      className={`attendance-btn ${
-                        reason === "Cannot Go" ? "active" : ""
-                      }`}
-                      onClick={() => handleReasonSelect("Cannot Go")}
-                    >
-                      <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
-                    </button>
-                  </div>
-                )}
-                <input
-                  type="text"
-                  placeholder="Leave a comment"
-                  className="comment-input"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
+                <h4>Select your reason</h4>
+                <div className="attendance-options">
+                  <button
+                    className={`attendance-btn ${
+                      reason === "Sick" ? "active" : ""
+                    }`}
+                    onClick={() => handleReasonSelect("Sick")}
+                  >
+                    <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
+                  </button>
+                  <button
+                    className={`attendance-btn ${
+                      reason === "Family Problem" ? "active" : ""
+                    }`}
+                    onClick={() => handleReasonSelect("Family Problem")}
+                  >
+                    <FontAwesomeIcon icon={faUserXmark} /> Family Problem
+                  </button>
+                  <button
+                    className={`attendance-btn ${
+                      reason === "Cannot Go" ? "active" : ""
+                    }`}
+                    onClick={() => handleReasonSelect("Cannot Go")}
+                  >
+                    <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
+                  </button>
+                </div>
               </div>
             )}
 
-            {/* Submit button */}
+            {/* Comment */}
+            <input
+              type="text"
+              className="comment-input"
+              placeholder="Leave a comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
+
+            {/* Submit */}
             <button
               className="submit-btn"
               onClick={handleSubmit}
@@ -211,7 +231,7 @@ function SDashboard() {
           </div>
         )}
 
-        {/* Report card after submit */}
+        {/* Report card */}
         {submitted && report && (
           <div className="report-card fade-in">
             <div className="report-header">
@@ -224,16 +244,22 @@ function SDashboard() {
                 <strong>Name:</strong> {report.studentResponseDto.firstName}{" "}
                 {report.studentResponseDto.lastName}
               </p>
+
               <p>
                 <strong>Status:</strong> {report.reasonType}
               </p>
-              <p>
-                <strong>Reason:</strong> {report.reason}
-              </p>
+
+              {report.reasonType === "ABSENT" && (
+                <p>
+                  <strong>Reason:</strong> {report.reason}
+                </p>
+              )}
+
               <p>
                 <strong>Comment:</strong>{" "}
                 {report.comment ? report.comment : "No comment"}
               </p>
+
               <p>
                 <strong>Date:</strong> {new Date().toLocaleDateString()}
               </p>
@@ -244,7 +270,10 @@ function SDashboard() {
                 ✅ Successfully reported your{" "}
                 <strong>
                   {report.reasonType.toLowerCase()} (
-                  {report.reason.replace("_", " ").toLowerCase()})
+                  {report.reason
+                    ? report.reason.replace("_", " ").toLowerCase()
+                    : "no reason"}
+                  )
                 </strong>{" "}
                 for today.
               </p>
