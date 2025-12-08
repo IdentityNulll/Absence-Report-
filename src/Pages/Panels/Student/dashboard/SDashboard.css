@@ -2,11 +2,13 @@
 .body {
   background: var(--bg-color);
   color: var(--text-color);
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  max-width: 100%;
+  /* padding: 10px; */
+  overflow: hidden;
   /* padding: 3rem 1rem; */
 }
 
@@ -53,6 +55,13 @@
   box-shadow: var(--shadow-medium);
   border: 1px solid var(--border-color);
   transition: var(--transition);
+}
+
+.container-smth {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .attendance-container:hover {
@@ -134,7 +143,8 @@
 }
 
 .submit-btn:hover {
-  background: var(--secondary-color);
+  background: var(--accent-color);
+  color: var(--text-color);
 }
 
 /* Submitted message */
@@ -170,10 +180,11 @@
 .comment-input {
   background: var(--gradient);
   border: none;
-  padding: 1rem;
+  padding: 1rem 2rem;
   border-radius: var(--radius);
   /* cursor: pointer; */
   font-weight: 600;
+  width: 300px;
   color: var(--text-color);
   display: flex;
   align-items: center;
@@ -190,57 +201,64 @@
   }
 }
 
-
+/* === Report Card (Updated Modern Style) === */
 .report-card {
   margin-top: 30px;
-  background: #f8f9fb;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-  animation: fadeIn 0.4s ease;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--border-color);
+  animation: fadeInUp 0.6s ease both;
+  width: 100%;
+  max-width: 100vh;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .report-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  border-bottom: 2px solid #e2e8f0;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .report-header h3 {
-  font-size: 20px;
+  font-size: 1.4rem;
   font-weight: 600;
-  color: #2e7d32;
+  color: var(--primary-color);
 }
 
 .success-icon {
-  color: #2e7d32;
-  font-size: 24px;
+  color: var(--accent-color);
+  font-size: 1.6rem;
+}
+
+.report-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .report-details p {
-  margin: 6px 0;
-  font-size: 15px;
-  color: #333;
+  margin: 0;
+  font-size: 1rem;
+  color: var(--subtext-color);
 }
 
 .report-details strong {
-  color: #111;
-}
-
-.report-footer {
-  margin-top: 15px;
-  text-align: center;
+  color: var(--text-color);
 }
 
 .success-msg {
-  color: #2e7d32;
-  font-weight: 500;
-  font-size: 15px;
+  margin-top: 20px;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
 }
-
 
 /* Animations */
 .fade-in-up {

@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import api from "../../../../api/axios";
 import "./SDashboard.css";
+import { toast } from "react-toastify";
 
 function SDashboard() {
   const [loading, setLoading] = useState(true);
@@ -21,94 +22,98 @@ function SDashboard() {
   const [submitting, setSubmitting] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
+  const reasonMap = {
+    Sick: "SICK",
+    "Family Problem": "FAMILY_MATTER",
+    "Cannot Go": "TRAVELING",
+    Emergency: "EMERGENCY",
+    Course: "COURSE",
+  };
+
+  // Fake loading
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 600);
+    const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
+  // Check if student already submitted attendance
   useEffect(() => {
     const checkAttendance = async () => {
       const studentId = localStorage.getItem("id");
       if (!studentId) return;
 
       try {
-        const response = await api.post("/attendance", { studentId });
+        const res = await api.get(`/attendance/by-userId/${studentId}`);
 
-        if (response.status === 200 && response.data?.data) {
-          const data = response.data.data;
+        if (res.status === 200 && res.data?.data) {
+          const data = res.data.data;
+          // console.log(data);
+
           setReport(data);
-
-          const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
-          setStudentName(fullName);
-
+          setStudentName(
+            `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`
+          );
           setIsLocked(true);
           setSubmitted(true);
         }
       } catch (err) {
-        console.log("No attendance yet or forbidden:", err);
+        console.log("No attendance found yet");
       }
     };
 
     checkAttendance();
   }, []);
 
+  // Handle main status (Absent / Late)
   const handleMainSelect = (status) => {
     if (isLocked) return;
     setMainStatus(status);
-    setReason("");
-    setSubmitted(false);
+    setReason(""); // reset sub reason
   };
 
-  const handleReasonSelect = (r) => {
-    if (isLocked) return;
-    setReason(r);
-    setSubmitted(false);
-  };
-
+  // Submit attendance
   const handleSubmit = async () => {
     const studentId = localStorage.getItem("id");
-    if (!studentId) return alert("Student ID not found!");
+    if (!studentId) return toast.error("Student ID missing!");
 
-    if (!mainStatus) return alert("Select Absent or Late first!");
-    if (mainStatus === "Absent" && !reason) return alert("Select a reason!");
+    if (!mainStatus) return toast.error("Select Absent or Late!");
+
+    if (mainStatus === "Absent" && !reason)
+      return toast.error("Select a reason for absence!");
+
+    const payload = {
+      studentId,
+      reason: mainStatus === "Late" ? null : reasonMap[reason] || "EMERGENCY",
+      reasonType: mainStatus.toUpperCase(), // ABSENT or LATE
+      comment: comment || "No comment",
+    };
 
     try {
       setSubmitting(true);
 
-      const payload = {
-        studentId,
-        reason:
-          reason === "Sick"
-            ? "SICK"
-            : reason === "Family Problem"
-            ? "FAMILY_MATTER"
-            : reason === "Cannot Go"
-            ? "CANNOT_GO"
-            : "OTHER",
-        reasonType: mainStatus.toUpperCase(),
-        comment: comment || "",
-      };
-
       await api.post("/attendance", payload);
 
-      // re-check attendance
-      const res = await api.post("/attendance/report", { studentId });
+      // Re-fetch report
+      const res = await api.get(`/attendance/by-userId/${studentId}`);
       const data = res.data.data;
 
-      const fullName = `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`;
-      setStudentName(fullName);
-
       setReport(data);
-      setSubmitted(true);
+      setStudentName(
+        `${data.studentResponseDto.firstName} ${data.studentResponseDto.lastName}`
+      );
       setIsLocked(true);
+      setSubmitted(true);
+
+      toast.success("Attendance submitted!");
     } catch (err) {
-      console.error("Submit error:", err);
-      alert("Failed to submit attendance.");
+      console.error(err);
+      toast.error("Failed to submit attendance.");
     } finally {
       setSubmitting(false);
     }
   };
 
+  // Loading screen
   if (loading) {
     return (
       <div className="loader-container">
@@ -120,87 +125,90 @@ function SDashboard() {
   return (
     <div className="body">
       <Header />
+
       <div className="container">
-        {/* Welcome */}
+        {/* Welcome Message */}
         <div className="welcome-card fade-in-right">
-          <div>
-            <h3>Welcome, {studentName ? studentName : "Student"}!</h3>
-            {!isLocked ? (
-              <p>Please report your attendance for today below 👇</p>
-            ) : (
-              <p>Your attendance for today has already been recorded ✅</p>
-            )}
-          </div>
+          <h3>Welcome, {studentName || "Student"}!</h3>
+
+          {!isLocked ? (
+            <p>Please report your attendance below 👇</p>
+          ) : (
+            <p>Your attendance for today has already been recorded ✅</p>
+          )}
         </div>
 
-        {/* Attendance Section */}
+        {/* Attendance Form */}
         {!isLocked && (
           <div className="attendance-container fade-in-up">
             <h3>Attendance Status</h3>
 
-            {/* Main Options */}
+            {/* Main selection */}
             <div className="attendance-options">
               <button
+                onClick={() => handleMainSelect("Absent")}
                 className={`attendance-btn ${
                   mainStatus === "Absent" ? "active" : ""
                 }`}
-                onClick={() => handleMainSelect("Absent")}
               >
                 <FontAwesomeIcon icon={faUserXmark} /> Absent
               </button>
+
               <button
+                onClick={() => handleMainSelect("Late")}
                 className={`attendance-btn ${
                   mainStatus === "Late" ? "active" : ""
                 }`}
-                onClick={() => handleMainSelect("Late")}
               >
                 <FontAwesomeIcon icon={faUserClock} /> Late
               </button>
             </div>
-
-            {/* Show reasons only if Absent */}
-            {mainStatus && (
+            {mainStatus === "Absent" && (
               <div className="reason-options fade-in-up">
-                {mainStatus === "Absent" && <h4>Select your reason</h4>}
-                {mainStatus === "Absent" && (
-                  <div className="attendance-options">
+                <h4>Select your reason</h4>
+
+                <div className="attendance-options">
+                  {[
+                    "Sick",
+                    "Family Problem",
+                    "Cannot Go",
+                    "Emergency",
+                    "Course",
+                  ].map((r) => (
                     <button
+                      key={r}
+                      onClick={() => setReason(r)}
                       className={`attendance-btn ${
-                        reason === "Sick" ? "active" : ""
+                        reason === r ? "active" : ""
                       }`}
-                      onClick={() => handleReasonSelect("Sick")}
                     >
-                      <FontAwesomeIcon icon={faHouseChimneyMedical} /> Sick
+                      <FontAwesomeIcon icon={faHouseChimneyMedical} /> {r}
                     </button>
-                    <button
-                      className={`attendance-btn ${
-                        reason === "Family Problem" ? "active" : ""
-                      }`}
-                      onClick={() => handleReasonSelect("Family Problem")}
-                    >
-                      <FontAwesomeIcon icon={faUserXmark} /> Family Problem
-                    </button>
-                    <button
-                      className={`attendance-btn ${
-                        reason === "Cannot Go" ? "active" : ""
-                      }`}
-                      onClick={() => handleReasonSelect("Cannot Go")}
-                    >
-                      <FontAwesomeIcon icon={faUserXmark} /> Cannot Go
-                    </button>
-                  </div>
-                )}
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* COMMENT SHOULD SHOW FOR BOTH ABSENT + LATE */}
+            {(mainStatus === "Absent" || mainStatus === "Late") && (
+              <div className="container-smth">
                 <input
                   type="text"
-                  placeholder="Leave a comment"
-                  className="comment-input"
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
+                  className="comment-input fade-in-up"
+                  placeholder={
+                    mainStatus === "Late"
+                      ? "Reason for being late"
+                      : "Leave a comment"
+                  }
                 />
               </div>
             )}
 
-            {/* Submit button */}
+            {/* Comment for Absent + Late */}
+
+            {/* Submit */}
             <button
               className="submit-btn"
               onClick={handleSubmit}
@@ -211,12 +219,12 @@ function SDashboard() {
           </div>
         )}
 
-        {/* Report card after submit */}
+        {/* Report Card */}
         {submitted && report && (
           <div className="report-card fade-in">
             <div className="report-header">
               <FontAwesomeIcon icon={faCheckCircle} className="success-icon" />
-              <h3>Attendance Successfully Recorded</h3>
+              <h3>Attendance Recorded</h3>
             </div>
 
             <div className="report-details">
@@ -224,31 +232,23 @@ function SDashboard() {
                 <strong>Name:</strong> {report.studentResponseDto.firstName}{" "}
                 {report.studentResponseDto.lastName}
               </p>
+
               <p>
-                <strong>Status:</strong> {report.reasonType}
+                <strong>Status:</strong> {report.reason}
               </p>
+
               <p>
-                <strong>Reason:</strong> {report.reason}
+                <strong>Comment:</strong> {report.comment}
               </p>
-              <p>
-                <strong>Comment:</strong>{" "}
-                {report.comment ? report.comment : "No comment"}
-              </p>
+
               <p>
                 <strong>Date:</strong> {new Date().toLocaleDateString()}
               </p>
             </div>
 
-            <div className="report-footer">
-              <p className="success-msg">
-                ✅ Successfully reported your{" "}
-                <strong>
-                  {report.reasonType.toLowerCase()} (
-                  {report.reason.replace("_", " ").toLowerCase()})
-                </strong>{" "}
-                for today.
-              </p>
-            </div>
+            <p className="success-msg">
+              Successfully reported your attendance for today.
+            </p>
           </div>
         )}
       </div>

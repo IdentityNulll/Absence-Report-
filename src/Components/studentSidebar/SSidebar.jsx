@@ -42,7 +42,7 @@ function Sidebar() {
       try {
         const response = await api.get(`/student/${id}`);
         setStudent(response.data?.data);
-        console.log(response);
+        // console.log(response);
       } catch (err) {
         console.error("Failed to fetch student info:", err);
       }
