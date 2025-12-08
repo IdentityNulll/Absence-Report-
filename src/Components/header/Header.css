@@ -29,7 +29,11 @@
 .logo-img {
   width: 42px;
   height: 42px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: #fff;
   font-weight: 600;
   font-size: 1.2rem;
@@ -40,11 +44,6 @@
   text-decoration: none;
   box-shadow: var(--shadow-light);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.logo-img:hover {
-  transform: scale(1.05);
-  box-shadow: var(--shadow-medium);
 }
 
 .header-left h2 {
@@ -77,11 +76,6 @@
   transition: color 0.3s ease, transform 0.3s ease;
 }
 
-.notification:hover {
-  color: var(--primary-color);
-  transform: translateY(-2px);
-}
-
 .notification sup {
   background: #ef4444;
   color: #fff;
@@ -110,12 +104,6 @@
   box-shadow: var(--shadow-light);
   transition: var(--transition);
 }
-
-.profile-avatar:hover {
-  box-shadow: var(--shadow-medium);
-  transform: scale(1.05);
-}
-
 /* ===========================
    Responsive Design
 =========================== */
@@ -157,7 +145,6 @@
     right: -5px;
   }
 }
-
 
 .notification > svg {
   animation: flip 0.9s ease-in-out infinite alternate;
