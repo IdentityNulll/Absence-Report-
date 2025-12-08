@@ -22,21 +22,18 @@ export default function SProfile() {
   useEffect(() => {
     const fetchStudent = async () => {
       const id = localStorage.getItem("id");
-      if (!id) {
-        console.error("Student ID not found in localStorage");
-        return;
-      }
 
       try {
-        const response = await api.get(`/student/${id}`);
-        const data = response.data?.data;
+        const res = await api.get(`/student/${id}`);
+        const data = res.data?.data;
+        console.log(data)
 
         if (data) {
           setStudent(data);
-          setProfileImage(data.photoUrl || null);
+          setProfileImage(data.photoUrl); 
         }
       } catch (err) {
-        console.error("Failed to load student profile:", err);
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -45,11 +42,28 @@ export default function SProfile() {
     fetchStudent();
   }, []);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setProfileImage(imageUrl);
+    if (!file) return;
+
+    const id = localStorage.getItem("id");
+    if (!id) return;
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await api.post(`/user-photo/${id}`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      // If upload success → fetch updated user with new photoUrl
+      const updated = await api.get(`/student/${id}`);
+      const newPhoto = updated.data?.data?.photoUrl;
+
+      if (newPhoto) setProfileImage(newPhoto);
+    } catch (err) {
+      console.error("Failed to upload photo:", err);
     }
   };
 

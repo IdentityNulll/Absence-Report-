@@ -10,7 +10,7 @@ import {
   faUser,
   faCalendar,
   faBell,
-  faHouse
+  faHouse,
 } from "@fortawesome/free-regular-svg-icons";
 import "./Sidebar.css";
 import ThemeSwitcher from "../ThemeSwitcher/ThemeSwitcher";
@@ -24,7 +24,7 @@ function Sidebar() {
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     closeSidebar();
     navigate("/");
   };

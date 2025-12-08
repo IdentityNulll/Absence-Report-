@@ -73,6 +73,4 @@ a, button {
   transition: var(--transition);
 }
 
-a:hover, button:hover {
-  color: var(--secondary-color);
-}
+

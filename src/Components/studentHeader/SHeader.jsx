@@ -18,7 +18,7 @@ export default function Header({ adminData }) {
           <sup>8</sup>
         </Link>
 
-        <Link to="/student/profile" className="logo-img">
+        <Link to="/student/profile" className="profile-placeholder">
           {adminData ? adminData.firstName?.[0]?.toUpperCase() : "S"}
         </Link>
       </div>

@@ -27,7 +27,7 @@ function Sidebar() {
   const closeSidebar = () => setIsOpen(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     closeSidebar();
     navigate("/");
   };

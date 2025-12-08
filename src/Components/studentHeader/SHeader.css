@@ -1,4 +1,3 @@
-
 .admin-header {
   display: flex;
   justify-content: space-between;
@@ -24,7 +23,11 @@
 .logo-img {
   width: 42px;
   height: 42px;
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
   color: #fff;
   font-weight: 600;
   font-size: 1.2rem;
@@ -37,6 +40,24 @@
   /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
 }
 
+.profile-placeholder {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  /* box-shadow: var(--shadow-light); */
+}
 
 .header-left h2 {
   margin: 0;
@@ -80,22 +101,6 @@
   font-weight: 600;
 }
 
-/* Profile Avatar */
-.profile-avatar {
-  width: 40px;
-  height: 40px;
-  background: var(--gradient);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: 600;
-  font-size: 0.9rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-light);
-  transition: var(--transition);
-}
 @media (max-width: 992px) {
   .admin-header {
     padding: 10px 25px;
@@ -134,7 +139,6 @@
     right: -5px;
   }
 }
-
 
 .notification > svg {
   animation: flip 0.9s ease-in-out infinite alternate;
