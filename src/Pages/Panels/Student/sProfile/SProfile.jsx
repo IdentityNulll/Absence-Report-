@@ -26,11 +26,18 @@ export default function SProfile() {
       try {
         const res = await api.get(`/student/${id}`);
         const data = res.data?.data;
-        console.log(data)
 
         if (data) {
           setStudent(data);
-          setProfileImage(data.photoUrl); 
+
+          if (data.photoUrl) {
+            const imageRes = await api.get(data.photoUrl, {
+              responseType: "blob",
+            });
+            const imageBlob = imageRes.data;
+            const imageObjectUrl = URL.createObjectURL(imageBlob);
+            setProfileImage(imageObjectUrl);
+          }
         }
       } catch (err) {
         console.error(err);

@@ -8,13 +8,9 @@
   min-height: calc(100vh - 80px);
   padding: 2rem 1rem;
 }
-
-/* ==============================
-   FULL PROFILE CARD
-============================== */
 .profile-card-full {
   width: 100%;
-  z-index: 999999;
+  z-index: 9;
   max-width: 700px;
   padding: 2.5rem;
   border-radius: var(--radius);
@@ -25,9 +21,6 @@
   /* animation: fadeIn 0.4s ease-in-out; */
 }
 
-/* ==============================
-   BIG AVATAR
-============================== */
 .profile-avatar-big {
   position: relative;
   width: 140px;

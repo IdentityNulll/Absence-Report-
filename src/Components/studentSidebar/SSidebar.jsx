@@ -22,6 +22,7 @@ function Sidebar() {
   const [student, setStudent] = useState(null);
   const navigate = useNavigate();
   const [studentId, setStudentId] = useState(null);
+  const [profileImage, setProfileImage] = useState(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
@@ -31,24 +32,35 @@ function Sidebar() {
     closeSidebar();
     navigate("/");
   };
-
+  const id = localStorage.getItem("id");
   useEffect(() => {
-    const fetchStudent = async () => {
-      const id = localStorage.getItem("id");
-      if (!id) return console.log("no id ");
-
-      setStudentId(id); // ← save it for JSX
-
+    const fetchStudentImage = async () => {
       try {
-        const response = await api.get(`/student/${id}`);
-        setStudent(response.data?.data);
-        // console.log(response);
+        const res = await api.get(`/student/${id}`);
+        const data = res.data?.data;
+
+        if (data) {
+          setStudent(data);
+
+          if (data.photoUrl) {
+            // Fetch the image as blob
+            const imageRes = await api.get(data.photoUrl, {
+              responseType: "blob",
+            });
+            const imageBlob = imageRes.data;
+            const imageObjectUrl = URL.createObjectURL(imageBlob);
+            setProfileImage(imageObjectUrl);
+
+            // Save blob URL in memory, NOT in localStorage
+            // If you want caching, you must cache the API route, not the blob
+          }
+        }
       } catch (err) {
-        console.error("Failed to fetch student info:", err);
+        console.error("Failed to fetch student image:", err);
       }
     };
 
-    fetchStudent();
+    fetchStudentImage();
   }, []);
 
   return (
@@ -62,14 +74,26 @@ function Sidebar() {
       <aside className={`sidebar ${isOpen ? "open" : ""}`}>
         <div className="logo">
           <div className="logo-text">
-            <div className="logo-img1">S</div>
+            {profileImage ? (
+              <img
+                src={profileImage}
+                alt="Profile"
+                className="avatar-img-big"
+                style={{ borderRadius: "50%", width: "30%" }}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faUser}
+                className="default-avatar-big"
+                style={{ fontSize: "16px" }}
+              />
+            )}
             <div className="logo-text1">
               <h4>
                 {student
                   ? `${student.firstName} ${student.lastName}`
                   : "Loading..."}
               </h4>
-              <p>{student ? student.role : ""}</p>
             </div>
           </div>
           <button className="close-btn" onClick={closeSidebar}>
@@ -84,7 +108,7 @@ function Sidebar() {
             <FontAwesomeIcon icon={faHouse} className="house" />{" "}
             <span>Home</span>
           </Link>
-          <Link to={`/student/${studentId}`} onClick={closeSidebar}>
+          <Link to={`/student/${id}`} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faUser} className="user" />{" "}
             <span>My Profile</span>
           </Link>
