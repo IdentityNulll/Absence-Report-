@@ -21,7 +21,6 @@ function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [student, setStudent] = useState(null);
   const navigate = useNavigate();
-  const [studentId, setStudentId] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -43,7 +42,6 @@ function Sidebar() {
           setStudent(data);
 
           if (data.photoUrl) {
-            // Fetch the image as blob
             const imageRes = await api.get(data.photoUrl, {
               responseType: "blob",
             });
@@ -51,8 +49,6 @@ function Sidebar() {
             const imageObjectUrl = URL.createObjectURL(imageBlob);
             setProfileImage(imageObjectUrl);
 
-            // Save blob URL in memory, NOT in localStorage
-            // If you want caching, you must cache the API route, not the blob
           }
         }
       } catch (err) {
