@@ -8,21 +8,6 @@ import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
-// ✅ define outside component so it's not re-created each render
-const SplineFrame = memo(() => (
-  <iframe
-    src="https://my.spline.design/r4xbot-glm2ThTI8CPTrAX41n5mkl9V/"
-    width="100%"
-    height="1200px"
-    className="frame"
-    frameBorder="0"
-    allowFullScreen
-    loading="lazy"
-    title="Spline Background"
-    sandbox="allow-scripts allow-same-origin"
-  ></iframe>
-));
-
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -40,20 +25,23 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
+    
     try {
       const response = await api.post("/auth/login", {
         mail: email,
         password,
       });
 
-      // Axios puts your response data here
       console.log(response.data);
       if (response.data.data?.currentUserId) {
         localStorage.setItem("id", response.data.data?.currentUserId);
       } else {
         console.log("Id error");
       }
-      // Example: backend returns token and role
       if (response.data.data?.token) {
         localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("role", response.data.data.role);
@@ -71,7 +59,6 @@ function Login() {
     } catch (error) {
       console.error(error);
 
-      // Show the exact backend error if available
       if (error.response?.data) {
         toast.error(
           error.response.data.password ||
