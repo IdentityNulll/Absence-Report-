@@ -21,6 +21,7 @@ function Login() {
       if (role === "STUDENT") navigate("/student/dashboard");
       else if (role === "TEACHER") navigate("/teacher/dashboard");
     }
+    localStorage.clear()
   }, [navigate]);
 
   const handleLogin = async (e) => {
@@ -29,7 +30,6 @@ function Login() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
 
-    
     try {
       const response = await api.post("/auth/login", {
         mail: email,
