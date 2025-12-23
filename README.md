@@ -1,12 +1,33 @@
-# React + Vite
+# 📚 Student Attendance Reporting System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application that allows **students to report their daily attendance** online.  
+The goal of this project is to simplify attendance tracking and make it more accessible for both students and schools.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Features
+- Students can submit attendance **daily**
+- Simple and user-friendly interface
+- Date-based attendance reporting
+- Organized and structured data handling
+- Responsive design (works on mobile & desktop)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠 Tech Stack
+**Frontend**
+- React
+- Vite
+
+**Backend**
+- Java
+
+---
+
+## 📌 How It Works
+1. Student opens the website  
+2. Selects the current date  
+3. Marks their attendance  
+4. Attendance is saved in the database  
+
+---
