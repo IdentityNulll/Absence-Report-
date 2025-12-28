@@ -5,7 +5,6 @@
   --subtext-color: #5f6368;
   --border-color: #e3e6eb;
   
-  /* Academic-friendly accent colors */
   --primary-color: #2563eb; /* calm blue */
   --secondary-color: #7c3aed; /* purple for highlights */
   --accent-color: #0ea5e9; /* sky blue for active states */
@@ -35,7 +34,6 @@
   --transition: all 0.3s ease;
 }
 
-/* Default body styles */
 body {
   background: var(--bg-color);
   color: var(--text-color);
@@ -47,7 +45,6 @@ body {
   line-height: 1.6;
 }
 
-/* Scrollbar */
 body::-webkit-scrollbar {
   width: 8px;
 }
@@ -62,12 +59,10 @@ body::-webkit-scrollbar-track {
   background: var(--bg-color);
 }
 
-/* Global transitions */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
 }
 
-/* Links, buttons, highlights */
 a, button {
   color: var(--primary-color);
   transition: var(--transition);

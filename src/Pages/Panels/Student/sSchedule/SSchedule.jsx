@@ -1,85 +1,222 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SSchedule.css";
 import Header from "../../../../Components/studentHeader/SHeader";
+import api from "../../../../api/axios";
+import {
+  faArrowRight,
+  faArrowLeft,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const days = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
+const periods = [
+  "Period 1",
+  "Period 2",
+  "Period 3",
+  "Period 4",
+  "Period 5",
+  "Period 6",
+];
+
+const DAY_ENUM = {
+  Monday: "MONDAY",
+  Tuesday: "TUESDAY",
+  Wednesday: "WEDNESDAY",
+  Thursday: "THURSDAY",
+  Friday: "FRIDAY",
+  Saturday: "SATURDAY",
+};
+
+const PERIOD_ENUM = {
+  "Period 1": "FIRST",
+  "Period 2": "SECOND",
+  "Period 3": "THIRD",
+  "Period 4": "FOURTH",
+  "Period 5": "FIFTH",
+  "Period 6": "SIXTH",
+};
 
 export default function Schedule() {
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  
-  const periods = ["Period 1","Period 2","Period 3","Period 4","Period 5","Period 6"];
+  const [schedule, setSchedule] = useState({});
+  const [teachers, setTeachers] = useState([]);
+  const [classes, setClasses] = useState([]);
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
-  const periodTimes = {
-    "Period 1": "09:00 - 10:00",
-    "Period 2": "10:10 - 11:10",
-    "Period 3": "11:20 - 12:20",
-    "Period 4": "13:00 - 14:00",
-    "Period 5": "14:10 - 15:10",
-    "Period 6": "15:20 - 16:20",
-  };
-
-  const [schedule, setSchedule] = useState({
-    Monday: {
-      "Period 1": { subject: "Math", room: "201", teacher: "Mr. Adams", className: "9-A" },
-      "Period 3": { subject: "Physics", room: "202", teacher: "Ms. Clark", className: "9-A" },
-    },
-    Tuesday: {
-      "Period 2": { subject: "English", room: "101", teacher: "Mrs. Miller", className: "9-A" },
-      "Period 5": { subject: "Chemistry", room: "305", teacher: "Dr. Lee", className: "9-A" },
-    },
-    Wednesday: {},
-    Thursday: {
-      "Period 4": { subject: "Biology", room: "302", teacher: "Mr. Green", className: "9-A" },
-    },
-    Friday: {},
-    Saturday: {},
+  const [form, setForm] = useState({
+    name: "",
+    day: "Monday",
+    period: "Period 1",
+    teacherId: "",
+    classId: "",
   });
 
-  // Detect real today (optional)
-  const todayIndex = new Date().getDay() - 1; 
-  const validToday = todayIndex >= 0 && todayIndex <= 5 ? todayIndex : 0;
-
-  const [selectedDayIndex, setSelectedDayIndex] = useState(validToday);
   const selectedDay = days[selectedDayIndex];
 
-  const handlePrevDay = () => {
-    setSelectedDayIndex((prev) => (prev === 0 ? days.length - 1 : prev - 1));
+  useEffect(() => {
+    fetchLessons();
+    fetchTeachers();
+    fetchClasses();
+  }, []);
+
+  const fetchTeachers = async () => {
+    try {
+      const res = await api.get("/teachers");
+      setTeachers(Array.isArray(res.data.data) ? res.data.data : []);
+    } catch (err) {
+      console.error("Failed to fetch teachers", err);
+    }
   };
 
-  const handleNextDay = () => {
-    setSelectedDayIndex((prev) => (prev === days.length - 1 ? 0 : prev + 1));
+  const fetchClasses = async () => {
+    try {
+      const res = await api.get("/class/all");
+      setClasses(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Failed to fetch classes", err);
+    }
   };
 
+  const fetchLessons = async () => {
+    try {
+      const res = await api.get("/lessons");
+      const lessons = res.data.data;
+
+      const normalized = {};
+
+      lessons.forEach((l) => {
+        const dayKey = Object.keys(DAY_ENUM).find(
+          (d) => DAY_ENUM[d] === l.dayOfWeek
+        );
+
+        const periodKey = Object.keys(PERIOD_ENUM).find(
+          (p) => PERIOD_ENUM[p] === l.period
+        );
+
+        if (!dayKey || !periodKey) {
+          console.warn("Skipped lesson (bad day/period):", l);
+          return;
+        }
+
+        if (!normalized[dayKey]) {
+          normalized[dayKey] = {};
+        }
+
+        normalized[dayKey][periodKey] = {
+          id: l.id,
+          subject: l.name,
+          teacher: l.teacherResponseDto
+            ? `${l.teacherResponseDto.firstName} ${l.teacherResponseDto.lastName}`
+            : "—",
+          className: l.classResponseDto?.name || "—",
+        };
+      });
+
+      setSchedule(normalized);
+    } catch (err) {
+      console.error("Failed to fetch lessons", err);
+    }
+  };
+  
+  const createLesson = async () => {
+    try {
+      await api.post("/lessons", {
+        name: form.name,
+        teacherId: form.teacherId,
+        classId: form.classId,
+        dayOfWeek: DAY_ENUM[form.day],
+        period: PERIOD_ENUM[form.period],
+      });
+
+      setShowModal(false);
+      setForm({
+        name: "",
+        day: "Monday",
+        period: "Period 1",
+        teacherId: "",
+        classId: "",
+      });
+
+      fetchLessons();
+    } catch (err) {
+      console.error("Create lesson failed", err);
+    }
+  };
+
+  const deleteLesson = async (id) => {
+    try {
+      await api.delete(`/lessons/${id}`);
+      fetchLessons();
+    } catch (err) {
+      console.error("Delete failed", err);
+    }
+  };
+
+  // ================= UI =================
   return (
     <div className="schedule-page">
       <Header />
 
-      {/* 🔥 Day Header with Arrows */}
-      <div className="day-selector fade-in-up">
-        <button className="arrow-btn" onClick={handlePrevDay}>◀</button>
-
-        <h2 className="selected-day-title">{selectedDay}</h2>
-
-        <button className="arrow-btn" onClick={handleNextDay}>▶</button>
+      <div className="day-selector">
+        <button
+          onClick={() => setSelectedDayIndex((p) => (p === 0 ? 5 : p - 1))}
+          className="arrow-btn"
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+        <h2>{selectedDay}</h2>
+        <button
+          onClick={() => setSelectedDayIndex((p) => (p === 5 ? 0 : p + 1))}
+          className="arrow-btn"
+        >
+          <FontAwesomeIcon icon={faArrowRight} />
+        </button>
       </div>
 
-      {/* 🔥 Show ONLY selected day's lessons */}
-      <div className="schedule-grid fade-in-up">
-        {periods.map((period) => {
-          const lesson = schedule[selectedDay]?.[period];
+      <button className="create-btn" onClick={() => setShowModal(true)}>
+        + Create Lesson
+      </button>
+
+      <div className="schedule-grid">
+        {periods.map((p) => {
+          const lesson = schedule[selectedDay]?.[p];
 
           return (
-            <div key={period} className="lesson-row">
+            <div key={p} className="lesson-row">
+              {/* LEFT: PERIOD */}
               <div className="period-info">
-                <strong>{period}</strong>
-                <p className="period-time">{periodTimes[period]}</p>
+                <strong>{p}</strong>
               </div>
 
-              <div className="lesson-content">
+              {/* RIGHT: LESSON */}
+              <div className="lesson-content1">
                 {lesson ? (
-                  <div className="lesson-box colorful-box">
-                    <h4>{lesson.subject}</h4>
-                    <p>Room {lesson.room}</p>
-                    <p>{lesson.teacher}</p>
-                    <span className="class-tag">{lesson.className}</span>
+                  <div className="lesson-box">
+                    <div className="lesson-content">
+                      <h4 className="class-name">{lesson.subject}</h4>
+                      <p className="class-tag">
+                        🧑‍🏫 The teacher — "{lesson.teacher}"
+                      </p>{" "}
+                      <br />
+                      <span className="class-tag">
+                        📚 The Class — {lesson.className}
+                      </span>
+                    </div>
+                    <button
+                      className="delete-btn"
+                      onClick={() => deleteLesson(lesson.id)}
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 ) : (
                   <span className="empty-slot">— No lesson —</span>
@@ -89,6 +226,78 @@ export default function Schedule() {
           );
         })}
       </div>
+
+      {showModal && (
+        <div className="modal-backdrop">
+          <div className="modal">
+            <h3>Create Lesson</h3>
+
+            <input
+              placeholder="Lesson name"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+
+            <select
+              value={form.day}
+              onChange={(e) => setForm({ ...form, day: e.target.value })}
+            >
+              {days.map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={form.period}
+              onChange={(e) => setForm({ ...form, period: e.target.value })}
+            >
+              {periods.map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+
+            {/* 🔥 TEACHER */}
+            <select
+              value={form.teacherId}
+              onChange={(e) => setForm({ ...form, teacherId: e.target.value })}
+            >
+              <option value="">Select Teacher</option>
+              {teachers.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.firstName} {t.lastName}
+                </option>
+              ))}
+            </select>
+
+            {/* 🔥 CLASS */}
+            <select
+              value={form.classId}
+              onChange={(e) => setForm({ ...form, classId: e.target.value })}
+            >
+              <option value="">Select Class</option>
+              {classes.map((c) => (
+                <option key={c.uuid} value={c.uuid}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+            <div className="modal-actions">
+              <button
+                onClick={createLesson}
+                disabled={!form.name || !form.teacherId || !form.classId}
+              >
+                Save
+              </button>
+              <button onClick={() => setShowModal(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
