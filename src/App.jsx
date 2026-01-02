@@ -6,7 +6,7 @@ import Login from "./Pages/Login/Login";
 import Dashboard from "./Pages/Panels/Teacher/Dashboard/Dashboard";
 import Profile from "./Pages/Panels/Teacher/profile/Profile";
 import ForgotPassword from "./Components/forgotPassword/ForgotPassword";
-import Schedule from "./Pages/Panels/Teacher/Schedule/SSchedule";
+import Schedule from "./Pages/Panels/Teacher/Schedule/Schedule";
 import Notifications from "./Pages/Panels/Teacher/Notifications/Notifications";
 import Analytics from "./Pages/Panels/Teacher/Analytics/Analytics";
 import SDashboard from "./Pages/Panels/Student/dashboard/SDashboard";
@@ -20,7 +20,7 @@ import SAnalytics from "./Pages/Panels/Student/analytics/Analytics"
 function App() {
   return (
     <div>
-      <AdminAnimate />
+      {/* <AdminAnimate /> */}
       <Routes>
         <Route path="/changepassword" element={<ChangePassword />} />
 

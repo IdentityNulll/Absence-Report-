@@ -78,7 +78,7 @@ function Login() {
     <div className="login-body">
       <div className="login-form">
         <h2 className="login-title">Welcome Back</h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="form">
           <div className="input-group">
             <input
               type="email"

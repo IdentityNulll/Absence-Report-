@@ -58,7 +58,7 @@ function Sidebar() {
             <FontAwesomeIcon icon={faHouse} className="house" />{" "}
             <span>Dashboard</span>
           </Link>
-          <Link to={"/teacher/profile"} onClick={closeSidebar}>
+          <Link to={`/teacher/`} onClick={closeSidebar}>
             <FontAwesomeIcon icon={faUser} className="user" />{" "}
             <span>My Profile</span>
           </Link>
