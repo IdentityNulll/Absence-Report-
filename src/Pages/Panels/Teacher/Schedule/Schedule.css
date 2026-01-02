@@ -1,0 +1,284 @@
+.schedule-page {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+  color: var(--text-color);
+}
+
+.day-selector {
+  margin-top: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1rem;
+}
+
+.selected-day-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  color: transparent;
+  letter-spacing: 0.5px;
+}
+
+.arrow-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 0.9rem;
+  font-size: 1.1rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-light);
+  color: var(--text-color);
+}
+
+.arrow-btn:hover {
+  background: var(--primary-color);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+.schedule-grid {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-medium);
+  margin-top: 1.6rem;
+  border: 1px solid var(--border-color);
+  padding: 1rem 0.8rem;
+  animation: fadeInUp 0.35s ease;
+}
+
+.lesson-row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0.5rem;
+}
+
+.lesson-row:last-child {
+  border-bottom: none;
+}
+
+.delete-btn {
+  background: #ff4d4d;
+  border: none;
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.delete-btn:hover {
+  background: #ff2e2e;
+}
+
+.period-info {
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+}
+
+.period-info strong {
+  font-size: 1.05rem;
+  color: var(--primary-color);
+}
+
+.period-time {
+  font-size: 0.85rem;
+  color: var(--subtext-color);
+  margin-top: 0.3rem;
+}
+
+.lesson-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: #fff;
+  padding: 1rem;
+  border-radius: var(--radius);
+  width: 100%;
+  box-shadow: var(--shadow-medium);
+  transition: var(--transition);
+  animation: fadeInUp 0.3s ease;
+}
+
+.lesson-box:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 8px 20px rgba(14, 165, 233, 0.3);
+}
+
+.lesson-box h4 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.lesson-box p {
+  margin-top: 0.2rem;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+.class-tag {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.empty-slot {
+  color: var(--subtext-color);
+  opacity: 0.7;
+  font-size: 1.1rem;
+  font-style: italic;
+  padding-left: 0.5rem;
+}
+
+
+
+@media (max-width: 500px) {
+  .schedule-page {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeBackdrop 0.25s ease;
+}
+
+.modal {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 420px;
+  padding: 1.6rem;
+  box-shadow: var(--shadow-medium);
+  border: 1px solid var(--border-color);
+  animation: scaleIn 0.25s ease;
+}
+
+.modal h3 {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.modal input::placeholder {
+  color: var(--subtext-color);
+}
+
+.modal input:focus,
+.modal select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.25);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.modal-actions button {
+  flex: 1;
+  padding: 0.7rem 0;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+}
+
+.modal-actions button:first-child {
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  color: var(--text-color);
+}
+
+.modal-actions button:first-child:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(14, 165, 233, 0.35);
+}
+
+.modal-actions button:first-child:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-actions button:last-child {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+}
+
+.modal-actions button:last-child:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+
+
+.modal select {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+}
+
+.modal select option {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.modal select option:checked {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.modal select option:hover {
+  background-color: var(--accent-color);
+  color: #fff;
+}
+
+@media (max-width: 500px) {
+  .modal {
+    margin: 0 0.8rem;
+    padding: 1.3rem;
+  }
+}

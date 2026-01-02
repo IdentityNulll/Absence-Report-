@@ -45,6 +45,7 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 35px; /* slightly bigger gap */
 }
 
@@ -81,7 +82,7 @@ input {
   box-shadow: 1px 1px 10px white;
 }
 .login-btn {
-  width: 100px;
+  width: 100%;
   padding: 10px;
   border-radius: 10px;
   font-weight: bold;

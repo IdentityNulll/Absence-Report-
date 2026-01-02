@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import Header from "../../../../Components/studentHeader/SHeader";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import api from "../../../../api/axios"; // make sure this points to your axios instance
-import "./SSchedule.css";
+import api from "../../../../api/axios"; 
+import "./Schedule.css";
 
 const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const periods = ["Period 1", "Period 2", "Period 3", "Period 4", "Period 5", "Period 6"];
