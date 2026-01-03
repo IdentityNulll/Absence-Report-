@@ -37,7 +37,6 @@ function Sidebar() {
       try {
         const res = await api.get(`/teachers/${id}`);
         const data = res.data?.data;
-        console.log(res)
 
         if (data) {
           setStudent(data);
