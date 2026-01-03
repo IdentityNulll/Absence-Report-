@@ -29,34 +29,39 @@ function Dashboard() {
           api.get(`/teachers/${teacherId}`),
         ]);
 
-        /* ================= TEACHER ================= */
         setTeacherName(teacherRes.data?.data?.firstName || "Teacher");
 
-        /* ================= STUDENTS ================= */
         const studentsData = Array.isArray(studentRes.data?.data)
           ? studentRes.data.data
           : [];
         setStudents(studentsData);
 
-        /* ================= LESSON FILTER ================= */
         const lessons = Array.isArray(lessonRes.data?.data)
           ? lessonRes.data.data
           : [];
 
         const teacherLessons = lessons.filter(
-          (lesson) => lesson.teacherResponseDto?.id === teacherId
+          (lesson) => lesson.teacherResponseDto?.id == teacherId
         );
 
-        console.log(teacherLessons);
 
         const classMap = new Map();
 
         teacherLessons.forEach((lesson) => {
           const cls = lesson.classResponseDto;
-          if (cls && !classMap.has(cls.uuid)) {
-            classMap.set(cls.uuid, cls);
+          if (!cls) return;
+
+          if (!classMap.has(cls.uuid)) {
+            classMap.set(cls.uuid, {
+              ...cls,
+              lessonCount: 1,
+            });
+          } else {
+            classMap.get(cls.uuid).lessonCount++;
           }
         });
+
+        setClasses([...classMap.values()]);
 
         setClasses([...classMap.values()]);
       } catch (err) {
@@ -84,7 +89,6 @@ function Dashboard() {
     <div className="tdb-body">
       <Header />
 
-      {/* ===== WELCOME ===== */}
       <div className="tdb-welcome-card tdb-fade-in-right">
         <div className="tdb-welcome-left">
           <div className="tdb-welcome-icon">
@@ -97,7 +101,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* ===== STATS ===== */}
       <div className="tdb-stats tdb-fade-in-up">
         <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faBookOpen} />
@@ -112,7 +115,6 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* ===== CLASSES ===== */}
       <div className="tdb-classes-container tdb-fade-in-up">
         <div className="tdb-my-classes">
           <h3>
