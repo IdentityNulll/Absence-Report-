@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import Header from "../../../../Components/studentHeader/SHeader";
+import Header from "../../../../Components/header/Header";
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import api from "../../../../api/axios"; 

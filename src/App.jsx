@@ -20,20 +20,17 @@ import SAnalytics from "./Pages/Panels/Student/analytics/Analytics"
 function App() {
   return (
     <div>
-      {/* <AdminAnimate /> */}
       <Routes>
         <Route path="/changepassword" element={<ChangePassword />} />
-
-        {/* Teacher */}
         <Route path="/" element={<Login />} />
+        <Route path={"/forgotpassword"} element={<ForgotPassword />} />
+
         <Route path={"/teacher/dashboard"} element={<Dashboard />} />
         <Route path={"/teacher/:id"} element={<Profile />} />
-        <Route path={"/forgotpassword"} element={<ForgotPassword />} />
         <Route path={"/teacher/schedule"} element={<Schedule />} />
         <Route path={"/teacher/notifications"} element={<Notifications />} />
         <Route path={"/teacher/analytics"} element={<Analytics />} />
 
-        {/* student */}
         <Route path={"/student/dashboard"} element={<SDashboard />} />
         <Route path={"/student/:id"} element={<SProfile />} />
         <Route path={"/student/notifications"} element={<SNotifications />} />

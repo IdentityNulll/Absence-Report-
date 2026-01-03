@@ -8,35 +8,54 @@ import {
   faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
 import "./Dashboard.css";
+import api from "../../../../api/axios";
 
 function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
-  const [teacherName, setTeacherName] = useState("Mr. John Doe");
+  const [teacherName, setTeacherName] = useState("Teacher");
 
-  // Dummy data
-  const dummyData = {
-    students: [
-      { id: 1, name: "Alice Johnson" },
-      { id: 2, name: "Mark Lee" },
-      { id: 3, name: "Sophia Brown" },
-      { id: 4, name: "Daniel Kim" },
-    ],
-    classes: [
-      { id: 1, name: "Mathematics", studentCount: 20 },
-      { id: 2, name: "Physics", studentCount: 18 },
-      { id: 3, name: "Chemistry", studentCount: 22 },
-    ],
-  };
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setStudents(dummyData.students);
-      setClasses(dummyData.classes);
-      setLoading(false);
-    }, 800);
-    return () => clearTimeout(timer);
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+
+        const [classRes, studentRes] = await Promise.all([
+          api.get("/class/all"),
+          api.get("/student"),
+        ]);
+
+        const classesData = Array.isArray(classRes.data)
+          ? classRes.data
+          : [];
+
+        const studentsData = Array.isArray(studentRes.data?.data)
+          ? studentRes.data.data
+          : [];
+
+        setClasses(classesData);
+        setStudents(studentsData);
+
+        // ===== ADMIN / TEACHER NAME =====
+        const adminId = localStorage.getItem("id");
+        if (adminId) {
+          const adminRes = await api.get(`/teachers/${adminId}`);
+          setTeacherName(
+            adminRes.data?.data?.firstName || "Teacher"
+          );
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load dashboard data.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
   }, []);
 
   if (loading) {
@@ -47,12 +66,16 @@ function Dashboard() {
     );
   }
 
+  if (error) {
+    return <p className="tdb-error">{error}</p>;
+  }
+
   return (
     <div className="tdb-body">
       <Header />
       {/* <Sidebar /> */}
 
-      {/* Welcome Card */}
+      {/* ========== WELCOME CARD ========== */}
       <div className="tdb-welcome-card tdb-fade-in-right">
         <div className="tdb-welcome-left">
           <div className="tdb-welcome-icon">
@@ -65,13 +88,14 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Section */}
+      {/* ========== STATS ========== */}
       <div className="tdb-stats tdb-fade-in-up">
         <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faBookOpen} />
           <p className="tdb-number">{classes.length}</p>
           <p className="tdb-text">Classes</p>
         </div>
+
         <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faUsers} />
           <p className="tdb-number">{students.length}</p>
@@ -79,7 +103,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Classes Section */}
+      {/* ========== CLASSES ========== */}
       <div className="tdb-classes-container tdb-fade-in-up">
         <div className="tdb-my-classes">
           <h3>
@@ -87,18 +111,24 @@ function Dashboard() {
           </h3>
 
           {classes.map((cls) => (
-            <div className="tdb-class-card" key={cls.id}>
+            <div className="tdb-class-card" key={cls.uuid}>
               <div className="tdb-class-left">
                 <div className="tdb-class-icon">
-                  {cls.name.slice(0, 2).toUpperCase()}
+                  {cls.name?.slice(0, 2).toUpperCase()}
                 </div>
                 <div>
                   <h4>{cls.name}</h4>
-                  <p>{cls.studentCount} students</p>
+                  <p>
+                    {cls.students?.length || 0} students
+                  </p>
                 </div>
               </div>
             </div>
           ))}
+
+          {classes.length === 0 && (
+            <p className="tdb-empty">No classes found.</p>
+          )}
         </div>
       </div>
     </div>
