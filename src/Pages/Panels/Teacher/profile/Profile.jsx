@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Header from "../../../../Components/studentHeader/SHeader";
+import Header from "../../../../Components/header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -14,7 +14,7 @@ import api from "../../../../api/axios";
 import { Link } from "react-router-dom";
 import "./Profile.css";
 
-export default function SProfile() {
+export default function Profile() {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
@@ -24,7 +24,7 @@ export default function SProfile() {
       const id = localStorage.getItem("id");
 
       try {
-        const res = await api.get(`/teacher/${id}`);
+        const res = await api.get(`/teachers/${id}`);
         const data = res.data?.data;
 
         if (data) {
@@ -65,7 +65,7 @@ export default function SProfile() {
       });
 
       // If upload success → fetch updated user with new photoUrl
-      const updated = await api.get(`/student/${id}`);
+      const updated = await api.get(`/teachers/${id}`);
       const newPhoto = updated.data?.data?.photoUrl;
 
       if (newPhoto) setProfileImage(newPhoto);
