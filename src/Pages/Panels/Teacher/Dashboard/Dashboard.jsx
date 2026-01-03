@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Sidebar from "../../../../Components/Sidebar/Sidebar";
 import Header from "../../../../Components/header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,7 +14,6 @@ function Dashboard() {
   const [students, setStudents] = useState([]);
   const [classes, setClasses] = useState([]);
   const [teacherName, setTeacherName] = useState("Teacher");
-
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -23,30 +21,44 @@ function Dashboard() {
       try {
         setLoading(true);
 
-        const [classRes, studentRes] = await Promise.all([
-          api.get("/class/all"),
+        const teacherId = localStorage.getItem("id");
+
+        const [lessonRes, studentRes, teacherRes] = await Promise.all([
+          api.get("/lessons"),
           api.get("/student"),
+          api.get(`/teachers/${teacherId}`),
         ]);
 
-        const classesData = Array.isArray(classRes.data)
-          ? classRes.data
-          : [];
+        /* ================= TEACHER ================= */
+        setTeacherName(teacherRes.data?.data?.firstName || "Teacher");
 
+        /* ================= STUDENTS ================= */
         const studentsData = Array.isArray(studentRes.data?.data)
           ? studentRes.data.data
           : [];
-
-        setClasses(classesData);
         setStudents(studentsData);
 
-        // ===== ADMIN / TEACHER NAME =====
-        const adminId = localStorage.getItem("id");
-        if (adminId) {
-          const adminRes = await api.get(`/teachers/${adminId}`);
-          setTeacherName(
-            adminRes.data?.data?.firstName || "Teacher"
-          );
-        }
+        /* ================= LESSON FILTER ================= */
+        const lessons = Array.isArray(lessonRes.data?.data)
+          ? lessonRes.data.data
+          : [];
+
+        const teacherLessons = lessons.filter(
+          (lesson) => lesson.teacherResponseDto?.id === teacherId
+        );
+
+        console.log(teacherLessons);
+
+        const classMap = new Map();
+
+        teacherLessons.forEach((lesson) => {
+          const cls = lesson.classResponseDto;
+          if (cls && !classMap.has(cls.uuid)) {
+            classMap.set(cls.uuid, cls);
+          }
+        });
+
+        setClasses([...classMap.values()]);
       } catch (err) {
         console.error(err);
         setError("Failed to load dashboard data.");
@@ -66,16 +78,13 @@ function Dashboard() {
     );
   }
 
-  if (error) {
-    return <p className="tdb-error">{error}</p>;
-  }
+  if (error) return <p className="tdb-error">{error}</p>;
 
   return (
     <div className="tdb-body">
       <Header />
-      {/* <Sidebar /> */}
 
-      {/* ========== WELCOME CARD ========== */}
+      {/* ===== WELCOME ===== */}
       <div className="tdb-welcome-card tdb-fade-in-right">
         <div className="tdb-welcome-left">
           <div className="tdb-welcome-icon">
@@ -88,7 +97,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* ========== STATS ========== */}
+      {/* ===== STATS ===== */}
       <div className="tdb-stats tdb-fade-in-up">
         <div className="tdb-stats-box">
           <FontAwesomeIcon icon={faBookOpen} />
@@ -103,7 +112,7 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* ========== CLASSES ========== */}
+      {/* ===== CLASSES ===== */}
       <div className="tdb-classes-container tdb-fade-in-up">
         <div className="tdb-my-classes">
           <h3>
@@ -118,16 +127,14 @@ function Dashboard() {
                 </div>
                 <div>
                   <h4>{cls.name}</h4>
-                  <p>
-                    {cls.students?.length || 0} students
-                  </p>
+                  <p>{cls.students?.length || 0} students</p>
                 </div>
               </div>
             </div>
           ))}
 
           {classes.length === 0 && (
-            <p className="tdb-empty">No classes found.</p>
+            <p className="tdb-empty">No classes assigned.</p>
           )}
         </div>
       </div>
